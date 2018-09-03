@@ -54,13 +54,13 @@
 //!
 //! First, we import the macro from the crate:
 //!
-//! ```
+//! ```rust
 //! #[macro_use] extern crate sm;
 //! ```
 //!
 //! Next, we initiate the macro declaration:
 //!
-//! ```
+//! ```rust
 //! # #[macro_use] extern crate sm;
 //! sm! {
 //! # Lock { Locked, Unlocked, Broken }
@@ -69,7 +69,7 @@
 //!
 //! Then, provide a name for the machine, and declare its states:
 //!
-//! ```
+//! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
 //!     Lock { Locked, Unlocked, Broken }
@@ -78,7 +78,7 @@
 //!
 //! Finally, we declare one or more events and the associated transitions:
 //!
-//! ```
+//! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
 //! #    Lock { Locked, Unlocked, Broken }
@@ -101,7 +101,7 @@
 //!
 //! You can initialise the machine as follows:
 //!
-//! ```
+//! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
 //! #    Lock { Locked, Unlocked, Broken }
@@ -123,7 +123,7 @@
 //!
 //! We can make this a bit less verbose by bringing our machine into scope:
 //!
-//! ```
+//! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
 //! #    Lock { Locked, Unlocked, Broken }
@@ -147,7 +147,7 @@
 //! We've initialised our machine in the `Locked` state. You can get the current
 //! state of the machine by sending the `state()` method to the machine:
 //!
-//! ```
+//! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
 //! #    Lock { Locked, Unlocked, Broken }
@@ -176,7 +176,7 @@
 //! Finally, as per our declaration, we can transition this machine to the
 //! `Unlocked` state by triggering the `TurnKey` event:
 //!
-//! ```
+//! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
 //! #    Lock { Locked, Unlocked, Broken }
@@ -211,7 +211,7 @@
 //! All these checks are applied on compile-time, so the following example would
 //! fail to compile:
 //!
-//! ```compile_fail
+//! ```rust,compile_fail
 //! # #[macro_use] extern crate sm;
 //! # sm! {
 //! #    Lock { Locked, Unlocked, Broken }
@@ -251,7 +251,7 @@
 //! Similarly, we cannot execute undefined transitions, these are also caught by
 //! the compiler:
 //!
-//! ```compile_fail
+//! ```rust,compile_fail
 //! # #[macro_use] extern crate sm;
 //! # sm! {
 //! #    Lock { Locked, Unlocked, Broken }

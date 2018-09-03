@@ -100,16 +100,12 @@ transitions, and can now use this state machine in our code.
 You can initialise the machine as follows:
 
 ```rust
-#
-#
 let sm = Lock::Machine::new(Lock::Locked);
 ```
 
 We can make this a bit less verbose by bringing our machine into scope:
 
 ```rust
-#
-#
 use Lock::*;
 let sm = Machine::new(Locked);
 ```
@@ -118,8 +114,6 @@ We've initialised our machine in the `Locked` state. You can get the current
 state of the machine by sending the `state()` method to the machine:
 
 ```rust
-#
-#
 let state = sm.state();
 assert_eq!(state, Locked);
 ```
@@ -131,8 +125,6 @@ Finally, as per our declaration, we can transition this machine to the
 `Unlocked` state by triggering the `TurnKey` event:
 
 ```rust
-#
-#
 let sm = sm.event(TurnKey);
 assert_eq!(sm.state(), Unlocked);
 ```
@@ -149,27 +141,9 @@ multiple readers using the machine in different states.
 All these checks are applied on compile-time, so the following example would
 fail to compile:
 
-```compile_fail
-# #[macro_use] extern crate sm;
-# sm! {
-#    Lock { Locked, Unlocked, Broken }
-#    TurnKey {
-#        Locked => Unlocked
-#        Unlocked => Locked
-#    }
-#
-#    Break {
-#        Locked => Broken
-#        Unlocked => Broken
-#    }
-# }
-#
-# fn main() {
-# use Lock::*;
-# let sm = Machine::new(Locked);
+```rust
 let sm2 = sm.event(TurnKey);
 assert_eq!(sm.state(), Locked);
-# }
 ```
 
 This fails with the following compilation error:
@@ -189,27 +163,9 @@ error[E0382]: use of moved value: `sm`
 Similarly, we cannot execute undefined transitions, these are also caught by
 the compiler:
 
-```compile_fail
-# #[macro_use] extern crate sm;
-# sm! {
-#    Lock { Locked, Unlocked, Broken }
-#    TurnKey {
-#        Locked => Unlocked
-#        Unlocked => Locked
-#    }
-#
-#    Break {
-#        Locked => Broken
-#        Unlocked => Broken
-#    }
-# }
-#
-# fn main() {
-# use Lock::*;
-# let sm = Machine::new(Broken);
+```rust
 let sm = sm.event(TurnKey);
 assert_eq!(sm.state(), Broken);
-# }
 ```
 
 This fails with the following compilation error:
