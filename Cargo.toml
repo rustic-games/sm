@@ -1,0 +1,26 @@
+[package]
+name = "sm"
+version = "0.4.0"
+authors = ["Jean Mertz <helloworld@rustic.games>"]
+license = "MIT OR Apache-2.0"
+description = "💋 SM – a static State Machine library"
+repository = "https://github.com/rusty-rockets/sm"
+keywords = ["fsm", "state machine"]
+categories = ["game-engines", "no-std", "simulation", "science", "visualization"]
+readme = "README.md"
+
+[dev-dependencies]
+criterion = "0.2"
+
+[[bench]]
+name = "sm"
+harness = false
+
+[badges]
+appveyor = { repository = "rusty-rockets/sm", service = "github" }
+circle-ci = { repository = "rusty-rockets/sm" }
+travis-ci = { repository = "rusty-rockets/sm" }
+codecov = { repository = "rusty-rockets/sm", branch = "master", service = "github" }
+is-it-maintained-issue-resolution = { repository = "rusty-rockets/sm" }
+is-it-maintained-open-issues = { repository = "rusty-rockets/sm" }
+maintenance = { status = "actively-developed" }
