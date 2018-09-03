@@ -1,5 +1,5 @@
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/rusty-rockets/sm?branch=master&svg=true)](https://ci.appveyor.com/project/rusty-rockets/sm/branch/master)
-[![Build Status](https://circleci.com/gh/rusty-rockets/sm/tree/master.svg?style=svg)](https://circleci.com/gh/rusty-rockets/sm/cargo-readme/tree/master)
+[![Build Status](https://circleci.com/gh/rusty-rockets/sm/tree/master.svg?style=svg)](https://circleci.com/gh/rusty-rockets/sm/tree/master)
 [![Build Status](https://travis-ci.org/rusty-rockets/sm.svg?branch=master)](https://travis-ci.org/rusty-rockets/sm)
 [![Coverage Status](https://codecov.io/gh/rusty-rockets/sm/branch/master/graph/badge.svg)](https://codecov.io/gh/rusty-rockets/sm)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/rusty-rockets/sm.svg)](http://isitmaintained.com/project/rusty-rockets/sm "Average time to resolve an issue")
