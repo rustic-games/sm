@@ -7,5 +7,29 @@ jobs:
     docker:
       - image: circleci/rust:latest
     steps:
+      - run:
+          name: Prepare
+          command: |
+            sudo apt-get update -yqq
+            sudo apt-get install -y libcurl4-openssl-dev libelf-dev libdw-dev cmake gcc
+
+            path=$PWD
+            wget -qO- https://github.com/SimonKagstrom/kcov/archive/v36.tar.gz | tar xvz -C /tmp
+            cd /tmp/kcov-36
+            mkdir build
+            cd build
+            cmake ..
+            make
+            sudo make install
+            cd $path
+
+            cargo install cargo-kcov
       - checkout
+      - run: cargo build
       - run: cargo test
+      - run: cargo bench
+      - run: cargo kcov
+      - run:
+          name: codecov.io
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success

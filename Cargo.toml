@@ -10,6 +10,7 @@ categories = ["game-engines", "no-std", "simulation", "science", "visualization"
 readme = "README.md"
 
 [dev-dependencies]
+cargo-kcov = "0.5"
 cargo-readme = "3.0"
 cargo-release = "0.10"
 criterion = "0.2"
