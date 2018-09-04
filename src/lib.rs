@@ -354,13 +354,21 @@ macro_rules! sm {
             }
 
             $(
-                #[derive(Copy, PartialEq, Eq, Debug)]
+                #[derive(Copy, Eq, Debug)]
                 pub struct $state;
                 impl State for $state {}
                 impl Clone for $state {
                     fn clone(&self) -> $state { *self }
                 }
+
+                impl PartialEq<$state> for $state {
+                    fn eq(&self, _: & $state) -> bool {
+                        true
+                    }
+                }
             )*
+
+            sm!{@recurse ($($state),*), ()}
 
             $(
                 #[derive(PartialEq, Eq, Debug)]
@@ -376,6 +384,36 @@ macro_rules! sm {
                 )*
             )*
         }
+    };
+
+    (@recurse ($state:ident, $($other:ident),+), ($($old:ident),*)) => {
+        $(
+            impl PartialEq<$other> for $state {
+                fn eq(&self, _: & $other) -> bool {
+                    false
+                }
+            }
+        )*
+
+        $(
+            impl PartialEq<$old> for $state {
+                fn eq(&self, _: & $old) -> bool {
+                    false
+                }
+            }
+        )*
+
+        sm!{@recurse ($($other),*), ($($old,)* $state)}
+    };
+
+    (@recurse ($state:ident), ($($old:ident),+)) => {
+        $(
+            impl PartialEq<$old> for $state {
+                fn eq(&self, _: & $old) -> bool {
+                    false
+                }
+            }
+        )*
     };
 }
 
@@ -420,6 +458,10 @@ mod tests {
 
         let sm5 = sm4.event(None);
         assert_eq!(sm5, Machine(Idle));
-        assert_eq!(sm5.state(), Idle);
+
+        let state = sm5.state();
+        assert_eq!(state, Idle);
+        assert_ne!(state, Rendering);
+        assert_ne!(state, Simulating);
     }
 }
