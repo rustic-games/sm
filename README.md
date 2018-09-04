@@ -1,3 +1,4 @@
+[![Chat](https://img.shields.io/discord/477552212156088320.svg?logo=discord)](https://discord.gg/Kc4qZWE "Ask a question or just enjoy your stay!")
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/JeanMertz/sm?branch=master&svg=true)](https://ci.appveyor.com/project/JeanMertz/sm/branch/master)
 [![Build Status](https://circleci.com/gh/rusty-rockets/sm/tree/master.svg?style=shield)](https://circleci.com/gh/rusty-rockets/sm/tree/master)
 [![Build Status](https://travis-ci.org/rusty-rockets/sm.svg?branch=master)](https://travis-ci.org/rusty-rockets/sm)

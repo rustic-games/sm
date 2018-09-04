@@ -1,3 +1,4 @@
+[![Chat](https://img.shields.io/discord/477552212156088320.svg?logo=discord)](https://discord.gg/Kc4qZWE "Ask a question or just enjoy your stay!")
 {{badges}}
 
 {{readme}}
