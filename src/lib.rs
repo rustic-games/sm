@@ -425,6 +425,7 @@ mod tests {
         None {
             Simulating => Idle
             Rendering => Idle
+            Idle => Idle
         }
 
         Simulate {
@@ -459,7 +460,10 @@ mod tests {
         let sm5 = sm4.event(None);
         assert_eq!(sm5, Machine(Idle));
 
-        let state = sm5.state();
+        let sm6 = sm5.event(None);
+        assert_eq!(sm6, Machine(Idle));
+
+        let state = sm6.state();
         assert_eq!(state, Idle);
         assert_ne!(state, Rendering);
         assert_ne!(state, Simulating);
