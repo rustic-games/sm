@@ -5,7 +5,6 @@
 [![Build Status](https://img.shields.io/travis/rusty-rockets/sm/master.svg?logo=travis&label=travis&logoColor=white)](https://travis-ci.org/rusty-rockets/sm)
 [![Coverage Status](https://img.shields.io/codecov/c/github/rusty-rockets/sm/master.svg?logo=codeship&label=codecov&logoColor=white)](https://codecov.io/gh/rusty-rockets/sm)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/rusty-rockets/sm.svg)](https://isitmaintained.com/project/rusty-rockets/sm "Average time to resolve an issue")
-[![Percentage of issues still open](https://isitmaintained.com/badge/open/rusty-rockets/sm.svg)](https://isitmaintained.com/project/rusty-rockets/sm "Percentage of issues still open")
 
 # 💋 SM – a static State Machine library
 
