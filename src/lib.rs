@@ -238,7 +238,7 @@
 //!
 //! This fails with the following compilation error:
 //!
-//! ```ignore
+//! ```text
 //! error[E0382]: use of moved value: `sm`
 //!   --> src/lib.rs:140:12
 //!    |
@@ -278,7 +278,7 @@
 //!
 //! This fails with the following compilation error:
 //!
-//! ```ignore
+//! ```text
 //! error[E0599]: no method named `event` found for type `Lock::Machine<Lock::Broken>` in the current scope
 //!   --> src/lib.rs:246:13
 //!    |
