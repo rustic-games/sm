@@ -1,5 +1,5 @@
 [![Crate Version](https://img.shields.io/crates/v/sm.svg?logo=rust&label=crates.io&logoColor=white&colorB=brightgreen)](https://crates.io/crates/sm)
-[![Chat](https://img.shields.io/discord/477552212156088320.svg?logo=discord&label=discord&logoColor=white)](https://discord.gg/Kc4qZWE "Ask a question or just enjoy your stay!")
+[![Discord Chat](https://img.shields.io/discord/477552212156088320.svg?logo=discord&label=discord&logoColor=white)](https://discord.gg/Kc4qZWE "Ask a question or just enjoy your stay!")
 [![Build Status](https://img.shields.io/appveyor/ci/JeanMertz/sm/master.svg?logo=appveyor&label=appveyor&logoColor=white)](https://ci.appveyor.com/project/JeanMertz/sm/branch/master)
 [![Build Status](https://img.shields.io/circleci/project/github/rusty-rockets/sm/master.svg?logo=circleci&label=circleci&logoColor=white)](https://circleci.com/gh/rusty-rockets/sm/tree/master)
 [![Build Status](https://img.shields.io/travis/rusty-rockets/sm/master.svg?logo=travis&label=travis&logoColor=white)](https://travis-ci.org/rusty-rockets/sm)
