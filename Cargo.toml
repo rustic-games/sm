@@ -10,7 +10,7 @@ categories = ["game-engines", "no-std", "simulation", "science", "visualization"
 readme = "README.md"
 
 [dev-dependencies]
-criterion = { version = "0.2", features = ["real_blackbox"] }
+criterion = "0.2"
 
 [[bench]]
 name = "sm"
