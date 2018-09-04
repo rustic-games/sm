@@ -10,6 +10,7 @@ categories = ["game-engines", "no-std", "simulation", "science", "visualization"
 readme = "README.md"
 
 [dev-dependencies]
+cargo-readme = "3.0"
 criterion = "0.2"
 
 [[bench]]
