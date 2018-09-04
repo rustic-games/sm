@@ -151,7 +151,7 @@ assert_eq!(sm.state(), Locked);
 
 This fails with the following compilation error:
 
-```rust
+```ignore
 error[E0382]: use of moved value: `sm`
   --> src/lib.rs:140:12
    |
@@ -173,7 +173,7 @@ assert_eq!(sm.state(), Broken);
 
 This fails with the following compilation error:
 
-```rust
+```ignore
 error[E0599]: no method named `event` found for type `Lock::Machine<Lock::Broken>` in the current scope
   --> src/lib.rs:246:13
    |
