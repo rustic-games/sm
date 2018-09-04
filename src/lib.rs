@@ -381,8 +381,6 @@ macro_rules! sm {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     sm!{
         GameLoop { Idle, Simulating, Rendering }
 
