@@ -17,7 +17,7 @@ name = "sm"
 harness = false
 
 [badges]
-appveyor = { repository = "rusty-rockets/sm", service = "github" }
+appveyor = { repository = "JeanMertz/sm", service = "github" }
 circle-ci = { repository = "rusty-rockets/sm" }
 travis-ci = { repository = "rusty-rockets/sm" }
 codecov = { repository = "rusty-rockets/sm", branch = "master", service = "github" }
