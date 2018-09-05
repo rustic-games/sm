@@ -406,7 +406,7 @@ macro_rules! sm {
         sm!{@recurse ($($other),*), ($($old,)* $state)}
     };
 
-    (@recurse ($state:ident), ($($old:ident),+)) => {
+    (@recurse ($state:ident), ($($old:ident),*)) => {
         $(
             impl PartialEq<$old> for $state {
                 fn eq(&self, _: & $old) -> bool {
