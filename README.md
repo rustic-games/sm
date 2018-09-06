@@ -10,8 +10,8 @@
 
 SM allows you to define a collection of states and events using Rust's type
 system. You can query the current state, and execute transitions between
-states. State machine usage is validated at compile-time. Undefined behavior
-is not an option.
+states. State machine usage is validated at compile-time. Undefined
+behaviour is not an option.
 
 The implementation ensures a zero-sized abstraction that uses Rust's
 type-system and ownership model to guarantee valid transitions between
