@@ -172,8 +172,54 @@
 //! # }
 //! ```
 //!
-//! You can use the above method to model your own domain logic based on the
-//! current state of the machine using any conditional expression.
+//! While you _can_ use `sm.state()` with conditional branching to execute your
+//! code based on the current state, this can be a bit tedious, it's less
+//! idiomatic, and it prevents you from using one extra compile-time validation
+//! tool in our toolbox: using Rust's exhaustive pattern matching requirement to
+//! ensure you've covered all possible state variants in your business logic.
+//!
+//! While `sm.state()` returns the state as a unit-like struct (which itself is
+//! a [ZST], or Zero Sized Type), you can send it the `as_enum()` method to get
+//! the corresponding enum variant.
+//!
+//! [ZST]:
+//! https://doc.rust-lang.org/nomicon/exotic-sizes.html#zero-sized-types-zsts
+//!
+//! Using the enum variant and pattern matching, you are able to do the
+//! following:
+//!
+//! ```rust
+//! # #[macro_use] extern crate sm;
+//! # sm! {
+//! #    Lock { Locked, Unlocked, Broken }
+//! #    TurnKey {
+//! #        Locked => Unlocked
+//! #        Unlocked => Locked
+//! #    }
+//! #
+//! #    Break {
+//! #        Locked => Broken
+//! #        Unlocked => Broken
+//! #    }
+//! # }
+//! #
+//! # fn main() {
+//! # use Lock::*;
+//! # let sm = Machine::new(Locked);
+//! # let state = sm.state();
+//! match state.as_enum() {
+//!     States::Locked => assert_eq!(state, Locked),
+//!     States::Unlocked => assert_eq!(state, Unlocked),
+//!     States::Broken =>  assert_eq!(state, Broken),
+//! }
+//! # }
+//! ```
+//!
+//! The compiler won't be satisfied until you've either exhausted all possible
+//! enum variants, or you explicitly opt-out of matching all variants, either
+//! way, you can be much more confident that your code won't break if you add a
+//! new state down the road, but forget to add it to a pattern match somewhere
+//! deep inside your code-base.
 //!
 //! Finally, as per our declaration, we can transition this machine to the
 //! `Unlocked` state by triggering the `TurnKey` event:
@@ -330,7 +376,9 @@ macro_rules! sm {
     ) => {
         #[allow(non_snake_case)]
         pub mod $name {
-            pub trait State {}
+            pub trait State {
+                fn as_enum(&self) -> States;
+            }
             pub trait Event {}
             pub trait Transition<S: State, E: Event> {
                 fn event(self, event: E) -> Machine<S>;
@@ -356,7 +404,11 @@ macro_rules! sm {
             $(
                 #[derive(Copy, Eq, Debug)]
                 pub struct $state;
-                impl State for $state {}
+                impl State for $state {
+                    fn as_enum(&self) -> States {
+                        States::$state
+                    }
+                }
                 impl Clone for $state {
                     fn clone(&self) -> $state { *self }
                 }
@@ -367,6 +419,11 @@ macro_rules! sm {
                     }
                 }
             )*
+
+            #[derive(Debug)]
+            pub enum States {
+                $($state),*
+            }
 
             sm!{@recurse ($($state),*), ()}
 
@@ -467,5 +524,11 @@ mod tests {
         assert_eq!(state, Idle);
         assert_ne!(state, Rendering);
         assert_ne!(state, Simulating);
+
+        match state.as_enum() {
+            States::Idle => assert_eq!(state, Idle),
+            States::Simulating => assert_eq!(state, Simulating),
+            States::Rendering => assert_eq!(state, Rendering),
+        }
     }
 }

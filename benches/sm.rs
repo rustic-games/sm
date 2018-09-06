@@ -47,6 +47,18 @@ fn criterion_benchmark(c: &mut Criterion) {
             })
         },
     );
+
+    c.bench_function("GameLoop; match Idle, Simulating, Rendering", |b| {
+        b.iter(|| {
+            let sm = Machine::new(Rendering);
+
+            match sm.state().as_enum() {
+                States::Idle => (),
+                States::Simulating => (),
+                States::Rendering => (),
+            }
+        })
+    });
 }
 
 criterion_group!(benches, criterion_benchmark);
