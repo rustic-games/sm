@@ -360,6 +360,31 @@
 //! **Go forth and transition!**
 
 #![no_std]
+#![forbid(
+    future_incompatible,
+    macro_use_extern_crate,
+    missing_copy_implementations,
+    missing_debug_implementations,
+    missing_docs,
+    nonstandard_style,
+    rust_2018_compatibility,
+    single_use_lifetimes,
+    trivial_casts,
+    trivial_numeric_casts,
+    unsafe_code,
+    variant_size_differences,
+)]
+#![warn(
+    non_snake_case,
+    rust_2018_idioms,
+    unused_import_braces,
+    unused_lifetimes,
+    unused_qualifications,
+    unused_results,
+    unused,
+)]
+#![feature(tool_lints)]
+#![deny(clippy::all)]
 
 /// Generate the declaratively described state machine diagram.
 ///
