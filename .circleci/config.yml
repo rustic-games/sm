@@ -29,6 +29,7 @@ jobs:
       - run: cargo build
       - run: cargo test
       - run: cargo bench
+      - run: cargo clean
       - run: cargo kcov
       - run:
           name: codecov.io
