@@ -179,14 +179,13 @@
 //! ensure you've covered all possible state variants in your business logic.
 //!
 //! While `sm.state()` returns the state as a unit-like struct (which itself is
-//! a [ZST], or Zero Sized Type), you can send it the `as_enum()` method to get
-//! the corresponding enum variant.
+//! a [ZST], or Zero Sized Type), you can use the `sm.as_enum()` method to get
+//! the state machine wrapped in an enum type.
 //!
 //! [ZST]:
 //! https://doc.rust-lang.org/nomicon/exotic-sizes.html#zero-sized-types-zsts
 //!
-//! Using the enum variant and pattern matching, you are able to do the
-//! following:
+//! Using the enum type and pattern matching, you are able to do the following:
 //!
 //! ```rust
 //! # #[macro_use] extern crate sm;
@@ -207,10 +206,10 @@
 //! # use Lock::*;
 //! # let sm = Machine::new(Locked);
 //! # let state = sm.state();
-//! match state.as_enum() {
-//!     States::Locked => assert_eq!(state, Locked),
-//!     States::Unlocked => assert_eq!(state, Unlocked),
-//!     States::Broken =>  assert_eq!(state, Broken),
+//! match sm.as_enum() {
+//!     States::Locked(m) => assert_eq!(m.state(), Locked),
+//!     States::Unlocked(m) => assert_eq!(m.state(), Unlocked),
+//!     States::Broken(m) =>  assert_eq!(m.state(), Broken),
 //! }
 //! # }
 //! ```
@@ -351,7 +350,7 @@
 //! in event type is invalid is an indication that you are trying to execute an
 //! illegal state transition.
 //!
-//! #### The End 💋
+//! #### The End 👋
 //!
 //! And that's it! There's nothing else to it, except a declarative – and easy
 //! to read – state machine construction macro, and a type-safe and
@@ -376,12 +375,13 @@ macro_rules! sm {
     ) => {
         #[allow(non_snake_case)]
         pub mod $name {
-            pub trait State {
-                fn as_enum(&self) -> States;
-            }
+            pub trait State {}
             pub trait Event {}
             pub trait Transition<S: State, E: Event> {
                 fn event(self, event: E) -> Machine<S>;
+            }
+            pub trait AsEnum<S: State> {
+                fn as_enum(self) -> States;
             }
 
             #[derive(PartialEq, Eq, Debug)]
@@ -404,11 +404,7 @@ macro_rules! sm {
             $(
                 #[derive(Copy, Eq, Debug)]
                 pub struct $state;
-                impl State for $state {
-                    fn as_enum(&self) -> States {
-                        States::$state
-                    }
-                }
+                impl State for $state {}
                 impl Clone for $state {
                     fn clone(&self) -> $state { *self }
                 }
@@ -422,8 +418,16 @@ macro_rules! sm {
 
             #[derive(Debug)]
             pub enum States {
-                $($state),*
+                $($state(Machine<$state>)),*
             }
+
+            $(
+                impl AsEnum<$state> for Machine<$state> {
+                    fn as_enum(self) -> States {
+                        States::$state(self)
+                    }
+                }
+            )*
 
             sm!{@recurse ($($state),*), ()}
 
@@ -525,10 +529,10 @@ mod tests {
         assert_ne!(state, Rendering);
         assert_ne!(state, Simulating);
 
-        match state.as_enum() {
-            States::Idle => assert_eq!(state, Idle),
-            States::Simulating => assert_eq!(state, Simulating),
-            States::Rendering => assert_eq!(state, Rendering),
+        match sm6.as_enum() {
+            States::Idle(_) => assert_eq!(state, Idle),
+            States::Simulating(_) => assert_eq!(state, Simulating),
+            States::Rendering(_) => assert_eq!(state, Rendering),
         }
     }
 }

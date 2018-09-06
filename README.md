@@ -128,20 +128,19 @@ tool in our toolbox: using Rust's exhaustive pattern matching requirement to
 ensure you've covered all possible state variants in your business logic.
 
 While `sm.state()` returns the state as a unit-like struct (which itself is
-a [ZST], or Zero Sized Type), you can send it the `as_enum()` method to get
-the corresponding enum variant.
+a [ZST], or Zero Sized Type), you can use the `sm.as_enum()` method to get
+the state machine wrapped in an enum type.
 
 [ZST]:
 https://doc.rust-lang.org/nomicon/exotic-sizes.html#zero-sized-types-zsts
 
-Using the enum variant and pattern matching, you are able to do the
-following:
+Using the enum type and pattern matching, you are able to do the following:
 
 ```rust
-match state.as_enum() {
-    States::Locked => assert_eq!(state, Locked),
-    States::Unlocked => assert_eq!(state, Unlocked),
-    States::Broken =>  assert_eq!(state, Broken),
+match sm.as_enum() {
+    States::Locked(m) => assert_eq!(m.state(), Locked),
+    States::Unlocked(m) => assert_eq!(m.state(), Unlocked),
+    States::Broken(m) =>  assert_eq!(m.state(), Broken),
 }
 ```
 
@@ -227,7 +226,7 @@ future), but any error telling you `event` is not implemented, or the passed
 in event type is invalid is an indication that you are trying to execute an
 illegal state transition.
 
-#### The End 💋
+#### The End 👋
 
 And that's it! There's nothing else to it, except a declarative – and easy
 to read – state machine construction macro, and a type-safe and

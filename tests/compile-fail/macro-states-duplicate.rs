@@ -13,4 +13,5 @@ sm!{
     //~| ERROR conflicting implementations of trait `std::cmp::Eq` for type `Lock::Unlocked`
     //~| ERROR conflicting implementations of trait `std::clone::Clone` for type `Lock::Unlocked`
     //~| ERROR conflicting implementations of trait `std::fmt::Debug` for type `Lock::Unlocked`
+    //~| ERROR conflicting implementations of trait `Lock::AsEnum<Lock::Unlocked>` for type `Lock::Machine<Lock::Unlocked>`
 }
