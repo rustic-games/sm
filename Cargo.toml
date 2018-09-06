@@ -14,7 +14,7 @@ cargo-kcov = "0.5"
 cargo-readme = "3.0"
 cargo-release = "0.10"
 compiletest_rs = "0.3"
-criterion = "0.2"
+criterion = { version = "0.2", features = ["real_blackbox"] }
 
 [[bench]]
 name = "sm"
