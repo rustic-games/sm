@@ -5,33 +5,94 @@ jobs:
       branches:
         ignore: gh-pages
     docker:
-      - image: circleci/rust:latest
+      - image: rust:1
     steps:
-      - run: rustup default nightly
-      - run:
-          name: Prepare
-          command: |
-            sudo apt-get update -yqq
-            sudo apt-get install -y binutils-dev libbfd-dev libcurl4-openssl-dev libelf-dev libdw-dev cmake gcc
-
-            path=$PWD
-            wget -qO- https://github.com/SimonKagstrom/kcov/archive/v36.tar.gz | tar xvz -C /tmp
-            cd /tmp/kcov-36
-            mkdir build
-            cd build
-            cmake ..
-            make
-            sudo make install
-            cd $path
-
-            cargo install cargo-kcov
       - checkout
-      - run: cargo build
-      - run: cargo test
-      - run: cargo bench
-      - run: cargo clean
-      - run: cargo kcov
       - run:
-          name: codecov.io
-          command: bash <(curl -s https://codecov.io/bash)
-          when: on_success
+          name: Switch to nightly rust
+          command: rustup default nightly
+
+      - run:
+          name: Version information
+          command: |
+            rustc --version
+            cargo --version
+            rustup --version
+
+      - run:
+          name: Calculate dependencies
+          command: cargo generate-lockfile
+
+      - restore_cache:
+          keys:
+            - v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
+            - v1-bench-{{ .Branch }}-{{ .Revision }}
+            - v1-bench-{{ .Branch }}
+            - v1-bench-
+
+      # DISABLED:
+      # running 11 tests
+      # kcov: error: Too much solib data read
+      # error: failed to get coverage
+      #
+      # - run:
+      #     name: Install cargo-kcov
+      #     command: |
+      #       apt-get update -yqq
+      #       apt-get install -y binutils-dev libbfd-dev libcurl4-openssl-dev libelf-dev libdw-dev cmake gcc
+
+      #       path=$PWD
+      #       wget -qO- https://github.com/SimonKagstrom/kcov/archive/v36.tar.gz | tar xvz -C /tmp
+      #       cd /tmp/kcov-36
+      #       mkdir build
+      #       cd build
+      #       cmake ..
+      #       make
+      #       make install
+      #       cd $path
+
+      #       cargo install cargo-kcov
+
+      - run:
+          name: Build all targets
+          command: cargo build --all --all-targets
+
+      - save_cache:
+          paths:
+            - /usr/local/cargo/registry
+            - target/debug/.fingerprint
+            - target/debug/build
+            - target/debug/deps
+          key: v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
+
+      # DISABLED:
+      # running 11 tests
+      # kcov: error: Too much solib data read
+      # error: failed to get coverage
+      #
+      # - run:
+      #     name: Measure code coverage
+      #     command: cargo kcov
+
+      - run:
+          name: Run all tests
+          command: cargo test --all
+
+      - run:
+          name: Run all benchmarks
+          command: cargo bench --all
+
+      - save_cache:
+          key: source-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - "target/criterion"
+
+      # DISABLED:
+      # running 11 tests
+      # kcov: error: Too much solib data read
+      # error: failed to get coverage
+      #
+      # - run:
+      #     name: Publish code coverage to codecov.io
+      #     command: bash <(curl -s https://codecov.io/bash)
+      #     when: on_success
