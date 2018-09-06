@@ -27,7 +27,7 @@ use self::GameLoop::*;
 
 fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function(
-        "GameLoop; Idle => Simulating => Idle => Rendering => Idle",
+        "base - Idle . Simulating . Idle . Rendering . Idle",
         |b| {
             b.iter(|| {
                 let sm = Machine::new(Idle);
@@ -48,7 +48,7 @@ fn criterion_benchmark(c: &mut Criterion) {
         },
     );
 
-    c.bench_function("GameLoop – match; Idle => Simulating => Idle => Rendering => Idle", |b| {
+    c.bench_function("match - Idle . Simulating . Idle . Rendering . Idle", |b| {
         b.iter(|| {
             let mut sm = Machine::new(Idle).as_enum();
 
@@ -98,7 +98,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     });
 
     c.bench_function(
-        "GameLoop – loop; Idle => Simulating => Idle => Rendering => Idle",
+        "loop - Idle . Simulating . Idle . Rendering . Idle",
         |b| {
             b.iter(|| {
                 let mut sm = Machine::new(Idle).as_enum();
