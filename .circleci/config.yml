@@ -12,11 +12,17 @@ jobs:
           command: rustup default nightly
 
       - run:
+          name: Install tooling
+          command: |
+            rustup component add clippy-preview
+
+      - run:
           name: Version information
           command: |
             rustc --version
             cargo --version
             rustup --version
+            cargo clippy --version
 
       - run:
           name: Calculate dependencies
@@ -72,6 +78,10 @@ jobs:
       # - run:
       #     name: Measure code coverage
       #     command: cargo kcov
+
+      - run:
+          name: Run all lints
+          command: cargo clippy
 
       - run:
           name: Run all tests
