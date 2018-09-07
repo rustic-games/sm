@@ -19,7 +19,7 @@ harness = false
 
 [badges]
 circle-ci = { repository = "rusty-rockets/sm" }
-appveyor = { repository = "JeanMertz/sm", service = "github" }
+appveyor = { repository = "rusty-rockets/sm", service = "github" }
 codecov = { repository = "rusty-rockets/sm", branch = "master", service = "github" }
 is-it-maintained-issue-resolution = { repository = "rusty-rockets/sm" }
 
