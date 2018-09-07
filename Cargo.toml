@@ -18,12 +18,10 @@ name = "sm"
 harness = false
 
 [badges]
-appveyor = { repository = "JeanMertz/sm", service = "github" }
 circle-ci = { repository = "rusty-rockets/sm" }
-travis-ci = { repository = "rusty-rockets/sm" }
+appveyor = { repository = "JeanMertz/sm", service = "github" }
 codecov = { repository = "rusty-rockets/sm", branch = "master", service = "github" }
 is-it-maintained-issue-resolution = { repository = "rusty-rockets/sm" }
-maintenance = { status = "actively-developed" }
 
 [package.metadata.release]
 dev-version-ext = "dev"
