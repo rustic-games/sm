@@ -431,6 +431,17 @@ pub trait Machine {
     fn state(&self) -> Self::State;
 }
 
+/// Transition provides the method required to transition from one state to
+/// another.
+///
+/// If you are using the `sm!` macro, then there is no need to interact with
+/// this trait.
+pub trait Transition<T, E> {
+    /// event consumes the state machine and returns a new state machine in the
+    /// correct state, based on the passed in event.
+    fn event(self, event: E) -> T;
+}
+
 /// Generate the declaratively described state machine diagram.
 ///
 /// See the main crate documentation for more details.
@@ -443,15 +454,12 @@ macro_rules! sm {
             $($from:ident => $to:ident)+
         })*
     ) => {
-        use $crate::Machine as M;
+        use $crate::{Machine as M, Transition};
 
         #[allow(non_snake_case)]
         pub mod $name {
-            use $crate::{Event, Machine as M, State};
+            use $crate::{Event, Machine as M, State, Transition};
 
-            pub trait Transition<S: State, E: Event> {
-                fn event(self, event: E) -> Machine<S>;
-            }
             pub trait AsEnum<S: State> {
                 fn as_enum(self) -> States;
             }
@@ -506,7 +514,7 @@ macro_rules! sm {
                 impl Event for $event {}
 
                 $(
-                    impl Transition<$to, $event> for Machine<$from> {
+                    impl Transition<Machine<$to>, $event> for Machine<$from> {
                         fn event(self, _: $event) -> Machine<$to> {
                             Machine::new($to)
                         }
