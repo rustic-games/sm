@@ -397,6 +397,8 @@
 #![feature(tool_lints)]
 #![deny(clippy::all)]
 
+use core::fmt;
+
 /// State is a custom [marker trait][m] that allows [unit-like structs][u] to be
 /// used as states in a state machine.
 ///
@@ -405,7 +407,7 @@
 ///
 /// [m]: https://doc.rust-lang.org/std/marker/index.html
 /// [u]: https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields
-pub trait State {}
+pub trait State: fmt::Debug {}
 
 /// Event is a custom [marker trait][m] that allows [unit-like structs][u] to be
 /// used as states in a state machine.
@@ -415,7 +417,7 @@ pub trait State {}
 ///
 /// [m]: https://doc.rust-lang.org/std/marker/index.html
 /// [u]: https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields
-pub trait Event {}
+pub trait Event: fmt::Debug {}
 
 /// Machine provides the method required to query a state machine for its
 /// current state.
