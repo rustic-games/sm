@@ -12,7 +12,7 @@ fn main() {
 
     let sm = Machine::new(Locked);
     while sm.state() == Locked {
-        sm = sm.event(TurnKey);
+        sm = sm.transition(TurnKey);
         //~^ ERROR mismatched types
     }
 }

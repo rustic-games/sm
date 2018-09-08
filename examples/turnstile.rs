@@ -27,15 +27,15 @@ fn main() {
     let sm = Machine::new(Locked);
     assert_eq!(sm.state(), Locked);
 
-    let sm = sm.event(Coin);
+    let sm = sm.transition(Coin);
     assert_eq!(sm.state(), Unlocked);
 
-    let sm = sm.event(Coin);
+    let sm = sm.transition(Coin);
     assert_eq!(sm.state(), Unlocked);
 
-    let sm = sm.event(Push);
+    let sm = sm.transition(Push);
     assert_eq!(sm.state(), Locked);
 
-    let sm = sm.event(Push);
+    let sm = sm.transition(Push);
     assert_eq!(sm.state(), Locked); // change to Unlocked to fail the assertion.
 }

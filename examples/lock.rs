@@ -19,9 +19,9 @@ fn main() {
     use Lock::*;
     let sm = Machine::new(Locked);
 
-    let sm = sm.event(TurnKey);
+    let sm = sm.transition(TurnKey);
     assert_eq!(sm.state(), Unlocked);
 
-    let sm = sm.event(TurnKey);
+    let sm = sm.transition(TurnKey);
     assert_eq!(sm.state(), Locked); // change to Unlocked to fail the assertion.
 }

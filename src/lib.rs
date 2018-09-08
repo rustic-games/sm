@@ -50,7 +50,7 @@
 //! fn main() {
 //!     use Lock::*;
 //!     let sm = Machine::new(Locked);
-//!     let sm = sm.event(TurnKey);
+//!     let sm = sm.transition(TurnKey);
 //!
 //!     assert_eq!(sm.state(), Unlocked);
 //! }
@@ -252,7 +252,7 @@
 //! # fn main() {
 //! # use Lock::*;
 //! # let sm = Machine::new(Locked);
-//! let sm = sm.event(TurnKey);
+//! let sm = sm.transition(TurnKey);
 //! assert_eq!(sm.state(), Unlocked);
 //! # }
 //! ```
@@ -287,7 +287,7 @@
 //! # fn main() {
 //! # use Lock::*;
 //! # let sm = Machine::new(Locked);
-//! let sm2 = sm.event(TurnKey);
+//! let sm2 = sm.transition(TurnKey);
 //! assert_eq!(sm.state(), Locked);
 //! # }
 //! ```
@@ -298,7 +298,7 @@
 //! error[E0382]: use of moved value: `sm`
 //!   --> src/lib.rs:140:12
 //!    |
-//! 14 | let sm2 = sm.event(TurnKey);
+//! 14 | let sm2 = sm.transition(TurnKey);
 //!    |           -- value moved here
 //! 15 | assert_eq!(sm.state(), Locked);
 //!    |            ^^ value used here after move
@@ -327,7 +327,7 @@
 //! # fn main() {
 //! # use Lock::*;
 //! # let sm = Machine::new(Broken);
-//! let sm = sm.event(TurnKey);
+//! let sm = sm.transition(TurnKey);
 //! assert_eq!(sm.state(), Broken);
 //! # }
 //! ```
@@ -598,22 +598,22 @@ mod tests {
         assert_eq!(sm1, Machine(Idle));
         assert_eq!(sm1.state(), Idle);
 
-        let sm2 = sm1.event(Simulate);
+        let sm2 = sm1.transition(Simulate);
         assert_eq!(sm2, Machine(Simulating));
         assert_eq!(sm2.state(), Simulating);
 
-        let sm3 = sm2.event(None);
+        let sm3 = sm2.transition(None);
         assert_eq!(sm3, Machine(Idle));
         assert_eq!(sm3.state(), Idle);
 
-        let sm4 = sm3.event(Render);
+        let sm4 = sm3.transition(Render);
         assert_eq!(sm4, Machine(Rendering));
         assert_eq!(sm4.state(), Rendering);
 
-        let sm5 = sm4.event(None);
+        let sm5 = sm4.transition(None);
         assert_eq!(sm5, Machine(Idle));
 
-        let sm6 = sm5.event(None);
+        let sm6 = sm5.transition(None);
         assert_eq!(sm6, Machine(Idle));
 
         let state = sm6.state();

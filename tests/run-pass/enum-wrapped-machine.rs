@@ -14,7 +14,7 @@ fn main() {
 
     loop {
         sm = match sm {
-            States::Locked(m) => m.event(TurnKey).as_enum(),
+            States::Locked(m) => m.transition(TurnKey).as_enum(),
             States::Unlocked(_) => {
                 break;
             }
