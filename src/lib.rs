@@ -417,6 +417,20 @@ pub trait State {}
 /// [u]: https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields
 pub trait Event {}
 
+/// Machine provides the method required to query a state machine for its
+/// current state.
+///
+/// If you are using the `sm!` macro, then there is no need to interact with
+/// this trait.
+pub trait Machine {
+    /// State represents the current (static) state of the state machine.
+    type State;
+
+    /// state is a convenience method to query the current state of the state
+    /// machine.
+    fn state(&self) -> Self::State;
+}
+
 /// Generate the declaratively described state machine diagram.
 ///
 /// See the main crate documentation for more details.
@@ -429,9 +443,11 @@ macro_rules! sm {
             $($from:ident => $to:ident)+
         })*
     ) => {
+        use $crate::Machine as M;
+
         #[allow(non_snake_case)]
         pub mod $name {
-            use $crate::{Event, State};
+            use $crate::{Event, Machine as M, State};
 
             pub trait Transition<S: State, E: Event> {
                 fn event(self, event: E) -> Machine<S>;
@@ -443,17 +459,17 @@ macro_rules! sm {
             #[derive(PartialEq, Eq, Debug)]
             pub struct Machine<S: State>(pub S);
 
-            impl<S> Machine<S>
-            where
-                S: State + Clone,
-            {
+            impl<S> M for Machine<S> where S: State + Clone {
+                type State = S;
+
+                fn state(&self) -> S {
+                    self.0.clone()
+                }
+            }
+
+            impl<S> Machine<S> where S: State + Clone {
                 pub fn new(state: S) -> Self {
                     Machine(state)
-                }
-
-                #[allow(dead_code)]
-                pub fn state(&self) -> S {
-                    self.0.clone()
                 }
             }
 
