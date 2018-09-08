@@ -438,12 +438,9 @@ macro_rules! sm {
             }
 
             $(
-                #[derive(Copy, Eq, Debug)]
+                #[derive(Copy, Clone, Eq, Debug)]
                 pub struct $state;
                 impl State for $state {}
-                impl Clone for $state {
-                    fn clone(&self) -> $state { *self }
-                }
 
                 impl PartialEq<$state> for $state {
                     fn eq(&self, _: & $state) -> bool {
