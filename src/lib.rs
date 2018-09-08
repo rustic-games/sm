@@ -424,7 +424,7 @@ pub trait Event: fmt::Debug {}
 ///
 /// If you are using the `sm!` macro, then there is no need to interact with
 /// this trait.
-pub trait Machine {
+pub trait Machine: fmt::Debug {
     /// State represents the current (static) state of the state machine.
     type State;
 
