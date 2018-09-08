@@ -442,6 +442,21 @@ pub trait Transition<T, E> {
     fn event(self, event: E) -> T;
 }
 
+/// AsEnum provides the method to convert a state machine instance to an enum
+/// type.
+///
+/// If you are using the `sm!` macro, then there is no need to interact with
+/// this trait.
+pub trait AsEnum<S: State> {
+    /// Enum is an enum that represents the current state machine as an enum
+    /// variant.
+    type Enum;
+
+    /// as_enum consumes the state machine and returns a new enum variant that
+    /// represents the consumed state machine.
+    fn as_enum(self) -> Self::Enum;
+}
+
 /// Generate the declaratively described state machine diagram.
 ///
 /// See the main crate documentation for more details.
@@ -454,17 +469,11 @@ macro_rules! sm {
             $($from:ident => $to:ident)+
         })*
     ) => {
-        use $crate::{Machine as M, Transition};
+        use $crate::{AsEnum, Machine as M, Transition};
 
         #[allow(non_snake_case)]
         pub mod $name {
-            use $crate::{Event, Machine as M, State, Transition};
-
-            pub trait AsEnum<S: State> {
-                type Enum;
-
-                fn as_enum(self) -> Self::Enum;
-            }
+            use $crate::{AsEnum, Event, Machine as M, State, Transition};
 
             #[derive(PartialEq, Eq, Debug)]
             pub struct Machine<S: State>(pub S);
