@@ -407,7 +407,7 @@ use core::fmt;
 ///
 /// [m]: https://doc.rust-lang.org/std/marker/index.html
 /// [u]: https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields
-pub trait State: fmt::Debug + Clone {}
+pub trait State: fmt::Debug + Eq + Clone {}
 
 /// Event is a custom [marker trait][m] that allows [unit-like structs][u] to be
 /// used as states in a state machine.
@@ -417,14 +417,14 @@ pub trait State: fmt::Debug + Clone {}
 ///
 /// [m]: https://doc.rust-lang.org/std/marker/index.html
 /// [u]: https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields
-pub trait Event: fmt::Debug {}
+pub trait Event: fmt::Debug + Eq {}
 
 /// Machine provides the method required to query a state machine for its
 /// current state.
 ///
 /// If you are using the `sm!` macro, then there is no need to interact with
 /// this trait.
-pub trait Machine: fmt::Debug {
+pub trait Machine: fmt::Debug + Eq {
     /// State represents the current (static) state of the state machine.
     type State;
 
