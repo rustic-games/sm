@@ -20,8 +20,8 @@ library.
   attached
 
 Using this library, you declaratively define your state machines as as set
-of states, connected via transitions, triggered by events. You can query
-the current state of the machine, or pattern match all possible states.
+of states, connected via transitions, triggered by events. You can query the
+current state of the machine, or pattern match all possible states.
 
 The implementation ensures a zero-sized abstraction that uses Rust's
 type-system and ownership model to guarantee valid transitions between
@@ -57,7 +57,7 @@ sm! {
 fn main() {
     use Lock::*;
     let sm = Machine::new(Locked);
-    let sm = sm.event(TurnKey);
+    let sm = sm.transition(TurnKey);
 
     assert_eq!(sm.state(), Unlocked);
 }
@@ -161,10 +161,10 @@ new state down the road, but forget to add it to a pattern match somewhere
 deep inside your code-base.
 
 Finally, as per our declaration, we can transition this machine to the
-`Unlocked` state by triggering the `TurnKey` event:
+`Unlocked` state by sending the `TurnKey` event:
 
 ```rust
-let sm = sm.event(TurnKey);
+let sm = sm.transition(TurnKey);
 assert_eq!(sm.state(), Unlocked);
 ```
 
@@ -181,7 +181,7 @@ All these checks are applied on compile-time, so the following example would
 fail to compile:
 
 ```rust
-let sm2 = sm.event(TurnKey);
+let sm2 = sm.transition(TurnKey);
 assert_eq!(sm.state(), Locked);
 ```
 
@@ -191,7 +191,7 @@ This fails with the following compilation error:
 error[E0382]: use of moved value: `sm`
   --> src/lib.rs:140:12
    |
-14 | let sm2 = sm.event(TurnKey);
+14 | let sm2 = sm.transition(TurnKey);
    |           -- value moved here
 15 | assert_eq!(sm.state(), Locked);
    |            ^^ value used here after move
@@ -203,14 +203,14 @@ Similarly, we cannot execute undefined transitions, these are also caught by
 the compiler:
 
 ```rust
-let sm = sm.event(TurnKey);
+let sm = sm.transition(TurnKey);
 assert_eq!(sm.state(), Broken);
 ```
 
 This fails with the following compilation error:
 
 ```text
-error[E0599]: no method named `event` found for type `Lock::Machine<Lock::Broken>` in the current scope
+error[E0599]: no method named `transition` found for type `Lock::Machine<Lock::Broken>` in the current scope
   --> src/lib.rs:246:13
    |
 3  | / sm! {
@@ -220,21 +220,21 @@ error[E0599]: no method named `event` found for type `Lock::Machine<Lock::Broken
 ...  |
 13 | |    }
 14 | | }
-   | |_- method `event` not found for this
+   | |_- method `transition` not found for this
 ...
-19 |   let sm = sm.event(TurnKey);
-   |               ^^^^^
+19 |   let sm = sm.transition(TurnKey);
+   |               ^^^^^^^^^^
    |
    = help: items from traits can only be used if the trait is implemented and in scope
-   = note: the following trait defines an item `event`, perhaps you need to implement it:
+   = note: the following trait defines an item `transition`, perhaps you need to implement it:
            candidate #1: `Lock::Transition`
    = note: this error originates in a macro outside of the current crate (in Nightly builds, run with -Z external-macro-backtrace for more info)
 ```
 
 The error message is not great (and can potentially be improved in the
-future), but any error telling you `event` is not implemented, or the passed
-in event type is invalid is an indication that you are trying to execute an
-illegal state transition.
+future), but any error telling you `transition` is not implemented, or the
+passed in event type is invalid is an indication that you are trying to
+execute an illegal state transition.
 
 #### The End 👋
 
