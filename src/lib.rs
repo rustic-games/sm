@@ -407,7 +407,7 @@ use core::fmt;
 ///
 /// [m]: https://doc.rust-lang.org/std/marker/index.html
 /// [u]: https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields
-pub trait State: fmt::Debug {}
+pub trait State: fmt::Debug + Clone {}
 
 /// Event is a custom [marker trait][m] that allows [unit-like structs][u] to be
 /// used as states in a state machine.
@@ -480,7 +480,7 @@ macro_rules! sm {
             #[derive(PartialEq, Eq, Debug)]
             pub struct Machine<S: State>(pub S);
 
-            impl<S> M for Machine<S> where S: State + Clone {
+            impl<S> M for Machine<S> where S: State {
                 type State = S;
 
                 fn state(&self) -> S {
@@ -488,7 +488,7 @@ macro_rules! sm {
                 }
             }
 
-            impl<S> Machine<S> where S: State + Clone {
+            impl<S> Machine<S> where S: State {
                 pub fn new(state: S) -> Self {
                     Machine(state)
                 }
