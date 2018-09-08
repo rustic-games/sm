@@ -397,6 +397,26 @@
 #![feature(tool_lints)]
 #![deny(clippy::all)]
 
+/// State is a custom [marker trait][m] that allows [unit-like structs][u] to be
+/// used as states in a state machine.
+///
+/// If you are using the `sm!` macro, then there is no need to interact with
+/// this trait.
+///
+/// [m]: https://doc.rust-lang.org/std/marker/index.html
+/// [u]: https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields
+pub trait State {}
+
+/// Event is a custom [marker trait][m] that allows [unit-like structs][u] to be
+/// used as states in a state machine.
+///
+/// If you are using the `sm!` macro, then there is no need to interact with
+/// this trait.
+///
+/// [m]: https://doc.rust-lang.org/std/marker/index.html
+/// [u]: https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields
+pub trait Event {}
+
 /// Generate the declaratively described state machine diagram.
 ///
 /// See the main crate documentation for more details.
@@ -411,8 +431,8 @@ macro_rules! sm {
     ) => {
         #[allow(non_snake_case)]
         pub mod $name {
-            pub trait State {}
-            pub trait Event {}
+            use $crate::{Event, State};
+
             pub trait Transition<S: State, E: Event> {
                 fn event(self, event: E) -> Machine<S>;
             }
