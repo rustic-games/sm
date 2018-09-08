@@ -439,9 +439,9 @@ pub trait Machine: fmt::Debug + Eq {
 /// If you are using the `sm!` macro, then there is no need to interact with
 /// this trait.
 pub trait Transition<T, E> {
-    /// event consumes the state machine and returns a new state machine in the
-    /// correct state, based on the passed in event.
-    fn event(self, event: E) -> T;
+    /// transition consumes the state machine and returns a new state machine in
+    /// the correct state, based on the passed in event.
+    fn transition(self, event: E) -> T;
 }
 
 /// AsEnum provides the method to convert a state machine instance to an enum
@@ -530,7 +530,7 @@ macro_rules! sm {
 
                 $(
                     impl Transition<Machine<$to>, $event> for Machine<$from> {
-                        fn event(self, _: $event) -> Machine<$to> {
+                        fn transition(self, _: $event) -> Machine<$to> {
                             Machine::new($to)
                         }
                     }
