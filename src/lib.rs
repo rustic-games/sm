@@ -461,7 +461,9 @@ macro_rules! sm {
             use $crate::{Event, Machine as M, State, Transition};
 
             pub trait AsEnum<S: State> {
-                fn as_enum(self) -> States;
+                type Enum;
+
+                fn as_enum(self) -> Self::Enum;
             }
 
             #[derive(PartialEq, Eq, Debug)]
@@ -500,7 +502,9 @@ macro_rules! sm {
 
             $(
                 impl AsEnum<$state> for Machine<$state> {
-                    fn as_enum(self) -> States {
+                    type Enum = States;
+
+                    fn as_enum(self) -> Self::Enum {
                         States::$state(self)
                     }
                 }
