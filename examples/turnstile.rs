@@ -2,16 +2,18 @@
 extern crate sm;
 
 sm! {
-    TurnStile { Locked, Unlocked }
+    TurnStile {
+        States { Locked, Unlocked }
 
-    Push {
-        Unlocked => Locked
-        Locked => Locked
-    }
+        Push {
+            Unlocked => Locked
+            Locked => Locked
+        }
 
-    Coin {
-        Locked => Unlocked
-        Unlocked => Unlocked
+        Coin {
+            Locked => Unlocked
+            Unlocked => Unlocked
+        }
     }
 }
 

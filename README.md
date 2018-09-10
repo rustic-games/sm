@@ -41,16 +41,18 @@ the state machine.
 #[macro_use] extern crate sm;
 
 sm! {
-    Lock { Locked, Unlocked, Broken }
+    Lock {
+        States { Locked, Unlocked, Broken }
 
-    TurnKey {
-        Locked => Unlocked
-        Unlocked => Locked
-    }
+        TurnKey {
+            Locked => Unlocked
+            Unlocked => Locked
+        }
 
-    Break {
-        Locked => Broken
-        Unlocked => Broken
+        Break {
+            Locked => Broken
+            Unlocked => Broken
+        }
     }
 }
 
@@ -87,20 +89,22 @@ sm! {
 Then, provide a name for the machine, and declare its states:
 
 ```rust
-    Lock { Locked, Unlocked, Broken }
+    Lock {
+        States { Locked, Unlocked, Broken }
 ```
 
 Finally, we declare one or more events and the associated transitions:
 
 ```rust
-    TurnKey {
-        Locked => Unlocked
-        Unlocked => Locked
-    }
+        TurnKey {
+            Locked => Unlocked
+            Unlocked => Locked
+        }
 
-    Break {
-        Locked => Broken
-        Unlocked => Broken
+        Break {
+            Locked => Broken
+            Unlocked => Broken
+        }
     }
 }
 ```

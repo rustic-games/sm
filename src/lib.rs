@@ -34,16 +34,18 @@
 //! #[macro_use] extern crate sm;
 //!
 //! sm! {
-//!     Lock { Locked, Unlocked, Broken }
+//!     Lock {
+//!         States { Locked, Unlocked, Broken }
 //!
-//!     TurnKey {
-//!         Locked => Unlocked
-//!         Unlocked => Locked
-//!     }
+//!         TurnKey {
+//!             Locked => Unlocked
+//!             Unlocked => Locked
+//!         }
 //!
-//!     Break {
-//!         Locked => Broken
-//!         Unlocked => Broken
+//!         Break {
+//!             Locked => Broken
+//!             Unlocked => Broken
+//!         }
 //!     }
 //! }
 //!
@@ -76,7 +78,9 @@
 //! ```rust
 //! # #[macro_use] extern crate sm;
 //! sm! {
-//! # Lock { Locked, Unlocked, Broken }
+//! #   Lock {
+//! #       States { Locked, Unlocked, Broken }
+//! #   }
 //! # }
 //! ```
 //!
@@ -85,7 +89,9 @@
 //! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
-//!     Lock { Locked, Unlocked, Broken }
+//!     Lock {
+//!         States { Locked, Unlocked, Broken }
+//! #   }
 //! # }
 //! ```
 //!
@@ -94,15 +100,18 @@
 //! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
-//! #    Lock { Locked, Unlocked, Broken }
-//!     TurnKey {
-//!         Locked => Unlocked
-//!         Unlocked => Locked
-//!     }
+//! #   Lock {
+//! #       States { Locked, Unlocked, Broken }
+//! #
+//!         TurnKey {
+//!             Locked => Unlocked
+//!             Unlocked => Locked
+//!         }
 //!
-//!     Break {
-//!         Locked => Broken
-//!         Unlocked => Broken
+//!         Break {
+//!             Locked => Broken
+//!             Unlocked => Broken
+//!         }
 //!     }
 //! }
 //! ```
@@ -117,16 +126,19 @@
 //! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
-//! #    Lock { Locked, Unlocked, Broken }
-//! #    TurnKey {
-//! #        Locked => Unlocked
-//! #        Unlocked => Locked
-//! #    }
+//! #   Lock {
+//! #       States { Locked, Unlocked, Broken }
 //! #
-//! #    Break {
-//! #        Locked => Broken
-//! #        Unlocked => Broken
-//! #    }
+//! #       TurnKey {
+//! #           Locked => Unlocked
+//! #           Unlocked => Locked
+//! #       }
+//! #
+//! #       Break {
+//! #           Locked => Broken
+//! #           Unlocked => Broken
+//! #       }
+//! #   }
 //! # }
 //! #
 //! # fn main() {
@@ -139,16 +151,19 @@
 //! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
-//! #    Lock { Locked, Unlocked, Broken }
-//! #    TurnKey {
-//! #        Locked => Unlocked
-//! #        Unlocked => Locked
-//! #    }
+//! #   Lock {
+//! #       States { Locked, Unlocked, Broken }
 //! #
-//! #    Break {
-//! #        Locked => Broken
-//! #        Unlocked => Broken
-//! #    }
+//! #       TurnKey {
+//! #           Locked => Unlocked
+//! #           Unlocked => Locked
+//! #       }
+//! #
+//! #       Break {
+//! #           Locked => Broken
+//! #           Unlocked => Broken
+//! #       }
+//! #   }
 //! # }
 //! #
 //! # fn main() {
@@ -163,16 +178,19 @@
 //! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
-//! #    Lock { Locked, Unlocked, Broken }
-//! #    TurnKey {
-//! #        Locked => Unlocked
-//! #        Unlocked => Locked
-//! #    }
+//! #   Lock {
+//! #       States { Locked, Unlocked, Broken }
 //! #
-//! #    Break {
-//! #        Locked => Broken
-//! #        Unlocked => Broken
-//! #    }
+//! #       TurnKey {
+//! #           Locked => Unlocked
+//! #           Unlocked => Locked
+//! #       }
+//! #
+//! #       Break {
+//! #           Locked => Broken
+//! #           Unlocked => Broken
+//! #       }
+//! #   }
 //! # }
 //! #
 //! # fn main() {
@@ -201,16 +219,19 @@
 //! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
-//! #    Lock { Locked, Unlocked, Broken }
-//! #    TurnKey {
-//! #        Locked => Unlocked
-//! #        Unlocked => Locked
-//! #    }
+//! #   Lock {
+//! #       States { Locked, Unlocked, Broken }
 //! #
-//! #    Break {
-//! #        Locked => Broken
-//! #        Unlocked => Broken
-//! #    }
+//! #       TurnKey {
+//! #           Locked => Unlocked
+//! #           Unlocked => Locked
+//! #       }
+//! #
+//! #       Break {
+//! #           Locked => Broken
+//! #           Unlocked => Broken
+//! #       }
+//! #   }
 //! # }
 //! #
 //! # fn main() {
@@ -237,16 +258,19 @@
 //! ```rust
 //! # #[macro_use] extern crate sm;
 //! # sm! {
-//! #    Lock { Locked, Unlocked, Broken }
-//! #    TurnKey {
-//! #        Locked => Unlocked
-//! #        Unlocked => Locked
-//! #    }
+//! #   Lock {
+//! #       States { Locked, Unlocked, Broken }
 //! #
-//! #    Break {
-//! #        Locked => Broken
-//! #        Unlocked => Broken
-//! #    }
+//! #       TurnKey {
+//! #           Locked => Unlocked
+//! #           Unlocked => Locked
+//! #       }
+//! #
+//! #       Break {
+//! #           Locked => Broken
+//! #           Unlocked => Broken
+//! #       }
+//! #   }
 //! # }
 //! #
 //! # fn main() {
@@ -272,16 +296,19 @@
 //! ```rust,compile_fail
 //! # #[macro_use] extern crate sm;
 //! # sm! {
-//! #    Lock { Locked, Unlocked, Broken }
-//! #    TurnKey {
-//! #        Locked => Unlocked
-//! #        Unlocked => Locked
-//! #    }
+//! #   Lock {
+//! #       States { Locked, Unlocked, Broken }
 //! #
-//! #    Break {
-//! #        Locked => Broken
-//! #        Unlocked => Broken
-//! #    }
+//! #       TurnKey {
+//! #           Locked => Unlocked
+//! #           Unlocked => Locked
+//! #       }
+//! #
+//! #       Break {
+//! #           Locked => Broken
+//! #           Unlocked => Broken
+//! #       }
+//! #   }
 //! # }
 //! #
 //! # fn main() {
@@ -312,16 +339,19 @@
 //! ```rust,compile_fail
 //! # #[macro_use] extern crate sm;
 //! # sm! {
-//! #    Lock { Locked, Unlocked, Broken }
-//! #    TurnKey {
-//! #        Locked => Unlocked
-//! #        Unlocked => Locked
-//! #    }
+//! #   Lock {
+//! #       States { Locked, Unlocked, Broken }
 //! #
-//! #    Break {
-//! #        Locked => Broken
-//! #        Unlocked => Broken
-//! #    }
+//! #       TurnKey {
+//! #           Locked => Unlocked
+//! #           Unlocked => Locked
+//! #       }
+//! #
+//! #       Break {
+//! #           Locked => Broken
+//! #           Unlocked => Broken
+//! #       }
+//! #   }
 //! # }
 //! #
 //! # fn main() {
