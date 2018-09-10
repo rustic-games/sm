@@ -2,11 +2,13 @@
 extern crate sm;
 
 sm!{
-    Lock { Unlocked }
+    Lock {
+        States { Unlocked }
 
-    TurnKey {
-        Unlocked => Locked
-        //~^ ERROR cannot find value `Locked` in this scope
-        //~| ERROR cannot find type `Locked` in this scope
+        TurnKey {
+            Unlocked => Locked
+            //~^ ERROR cannot find value `Locked` in this scope
+            //~| ERROR cannot find type `Locked` in this scope
+        }
     }
 }

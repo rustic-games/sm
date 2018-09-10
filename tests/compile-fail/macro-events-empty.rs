@@ -2,8 +2,10 @@
 extern crate sm;
 
 sm!{
-    Lock { Unlocked }
+    Lock {
+        States { Unlocked }
 
-    TurnKey {}
-    //~^ ERROR no rules expected the token `}`
+        TurnKey {}
+        //~^ ERROR no rules expected the token `}`
+    }
 }

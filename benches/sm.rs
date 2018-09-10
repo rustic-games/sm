@@ -6,19 +6,21 @@ extern crate sm;
 use criterion::Criterion;
 
 sm!{
-    GameLoop { Idle, Simulating, Rendering }
+    GameLoop {
+        States { Idle, Simulating, Rendering }
 
-    None {
-        Simulating => Idle
-        Rendering => Idle
-    }
+        None {
+            Simulating => Idle
+            Rendering => Idle
+        }
 
-    Simulate {
-        Idle => Simulating
-    }
+        Simulate {
+            Idle => Simulating
+        }
 
-    Render {
-        Idle => Rendering
+        Render {
+            Idle => Rendering
+        }
     }
 }
 

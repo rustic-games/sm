@@ -2,12 +2,14 @@
 extern crate sm;
 
 sm!{
-    Lock { Unlocked }
+    Lock {
+        States { Unlocked }
 
-    TurnKey {
-        // FIXME: investigate why this compiles without main()
-        Locked => Unlocked
-        //~^ ERROR cannot find type `Locked` in this scope
+        TurnKey {
+            // FIXME: investigate why this compiles without main()
+            Locked => Unlocked
+            //~^ ERROR cannot find type `Locked` in this scope
+        }
     }
 }
 

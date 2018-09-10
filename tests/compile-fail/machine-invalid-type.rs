@@ -2,9 +2,11 @@
 extern crate sm;
 
 sm!{
-    Lock { Locked, Unlocked }
+    Lock {
+        States { Locked, Unlocked }
 
-    TurnKey { Locked => Unlocked }
+        TurnKey { Locked => Unlocked }
+    }
 }
 
 fn main() {

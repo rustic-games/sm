@@ -3,9 +3,11 @@ extern crate sm;
 
 sm!{
     Lock {
-        Locked,
-        Unlocked,
-        Broken
+        States {
+            Locked,
+            Unlocked,
+            Broken
+        }
     }
 }
 

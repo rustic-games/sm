@@ -2,14 +2,16 @@
 extern crate sm;
 
 sm!{
-    Lock { Locked }
+    Lock {
+        States { Locked }
 
-    TurnKey {
-        Locked => Locked
-    }
+        TurnKey {
+            Locked => Locked
+        }
 
-    Knock {
-        Locked => Locked
+        Knock {
+            Locked => Locked
+        }
     }
 }
 

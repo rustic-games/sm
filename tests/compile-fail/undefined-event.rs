@@ -2,7 +2,9 @@
 extern crate sm;
 
 sm!{
-    Lock { Locked }
+    Lock {
+        States { Locked }
+    }
 }
 
 fn main() {

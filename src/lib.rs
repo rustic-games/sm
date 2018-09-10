@@ -577,20 +577,22 @@ macro_rules! sm {
 #[cfg(test)]
 mod tests {
     sm!{
-        GameLoop { Idle, Simulating, Rendering }
+        GameLoop {
+            States { Idle, Simulating, Rendering }
 
-        None {
-            Simulating => Idle
-            Rendering => Idle
-            Idle => Idle
-        }
+            None {
+                Simulating => Idle
+                Rendering => Idle
+                Idle => Idle
+            }
 
-        Simulate {
-            Idle => Simulating
-        }
+            Simulate {
+                Idle => Simulating
+            }
 
-        Render {
-            Idle => Rendering
+            Render {
+                Idle => Rendering
+            }
         }
     }
 
