@@ -6,13 +6,11 @@ sm! {
         States { Locked, Unlocked }
 
         Push {
-            Unlocked => Locked
-            Locked => Locked
+            Unlocked, Locked => Locked
         }
 
         Coin {
-            Locked => Unlocked
-            Unlocked => Unlocked
+            Locked, Unlocked => Unlocked
         }
     }
 }

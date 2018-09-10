@@ -6,7 +6,7 @@ sm! {
         States { Locked, Unlocked }
 
         TurnKey {
-            Locked => Unlocked
+            Locked,
             Unlocked => Locked
         }
     }

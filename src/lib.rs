@@ -499,7 +499,7 @@ macro_rules! sm {
             States { $($state:ident),+ $(,)* }
 
             $($event:ident {
-                $($from:ident => $to:ident)+
+                $($($from:ident),+ => $to:ident)+
             })*
         })+
     ) => {
@@ -562,11 +562,13 @@ macro_rules! sm {
                     impl Event for $event {}
 
                     $(
-                        impl Transition<Machine<$to>, $event> for Machine<$from> {
-                            fn transition(self, _: $event) -> Machine<$to> {
-                                Machine::new($to)
+                        $(
+                            impl Transition<Machine<$to>, $event> for Machine<$from> {
+                                fn transition(self, _: $event) -> Machine<$to> {
+                                    Machine::new($to)
+                                }
                             }
-                        }
+                        )*
                     )*
                 )*
             }
@@ -611,8 +613,8 @@ mod tests {
             States { Idle, Simulating, Rendering }
 
             None {
-                Simulating => Idle
-                Rendering => Idle
+                Simulating,
+                Rendering,
                 Idle => Idle
             }
 
