@@ -465,78 +465,82 @@ pub trait AsEnum<S: State> {
 #[macro_export]
 macro_rules! sm {
     (
-        $name:ident { $($state:ident),+ $(,)* }
+        $($name:ident {
+            States { $($state:ident),+ $(,)* }
 
-        $($event:ident {
-            $($from:ident => $to:ident)+
-        })*
+            $($event:ident {
+                $($from:ident => $to:ident)+
+            })*
+        })+
     ) => {
         use $crate::{AsEnum, Machine as M, Transition};
 
-        #[allow(non_snake_case)]
-        pub mod $name {
-            use $crate::{AsEnum, Event, Machine as M, State, Transition};
+        $(
+            #[allow(non_snake_case)]
+            pub mod $name {
+                use $crate::{AsEnum, Event, Machine as M, State, Transition};
 
-            #[derive(PartialEq, Eq, Debug)]
-            pub struct Machine<S: State>(pub S);
-
-            impl<S> M for Machine<S> where S: State {
-                type State = S;
-
-                fn state(&self) -> S {
-                    self.0.clone()
-                }
-            }
-
-            impl<S> Machine<S> where S: State {
-                pub fn new(state: S) -> Self {
-                    Machine(state)
-                }
-            }
-
-            $(
-                #[derive(Copy, Clone, Eq, Debug)]
-                pub struct $state;
-                impl State for $state {}
-
-                impl PartialEq<$state> for $state {
-                    fn eq(&self, _: & $state) -> bool {
-                        true
-                    }
-                }
-            )*
-
-            #[derive(Debug)]
-            pub enum States {
-                $($state(Machine<$state>)),*
-            }
-
-            $(
-                impl AsEnum<$state> for Machine<$state> {
-                    type Enum = States;
-
-                    fn as_enum(self) -> Self::Enum {
-                        States::$state(self)
-                    }
-                }
-            )*
-
-            sm!{@recurse ($($state),*), ()}
-
-            $(
                 #[derive(PartialEq, Eq, Debug)]
-                pub struct $event;
-                impl Event for $event {}
+                pub struct Machine<S: State>(pub S);
+
+                impl<S> M for Machine<S> where S: State {
+                    type State = S;
+
+                    fn state(&self) -> S {
+                        self.0.clone()
+                    }
+                }
+
+                impl<S> Machine<S> where S: State {
+                    pub fn new(state: S) -> Self {
+                        Machine(state)
+                    }
+                }
 
                 $(
-                    impl Transition<Machine<$to>, $event> for Machine<$from> {
-                        fn transition(self, _: $event) -> Machine<$to> {
-                            Machine::new($to)
+                    #[derive(Copy, Clone, Eq, Debug)]
+                    pub struct $state;
+                    impl State for $state {}
+
+                    impl PartialEq<$state> for $state {
+                        fn eq(&self, _: & $state) -> bool {
+                            true
                         }
                     }
                 )*
-            )*
-        }
+
+                #[derive(Debug)]
+                pub enum States {
+                    $($state(Machine<$state>)),*
+                }
+
+                $(
+                    impl AsEnum<$state> for Machine<$state> {
+                        type Enum = States;
+
+                        fn as_enum(self) -> Self::Enum {
+                            States::$state(self)
+                        }
+                    }
+                )*
+
+                sm!{@recurse ($($state),*), ()}
+
+                $(
+                    #[derive(PartialEq, Eq, Debug)]
+                    pub struct $event;
+                    impl Event for $event {}
+
+                    $(
+                        impl Transition<Machine<$to>, $event> for Machine<$from> {
+                            fn transition(self, _: $event) -> Machine<$to> {
+                                Machine::new($to)
+                            }
+                        }
+                    )*
+                )*
+            }
+        )*
     };
 
     (@recurse ($state:ident, $($other:ident),+), ($($old:ident),*)) => {
