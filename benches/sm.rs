@@ -4,7 +4,6 @@ extern crate criterion;
 extern crate sm;
 
 use criterion::Criterion;
-use sm::*;
 
 sm!{
     GameLoop { Idle, Simulating, Rendering }
