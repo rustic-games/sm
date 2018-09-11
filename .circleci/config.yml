@@ -2,7 +2,8 @@ version: 2
 jobs:
   build:
     branches:
-      ignore: gh-pages
+      ignore:
+        - gh-pages
     docker:
       - image: rust:1
     steps:
