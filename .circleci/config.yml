@@ -67,8 +67,6 @@ jobs:
           paths:
             - /usr/local/cargo/registry
             - target/debug/.fingerprint
-            - target/debug/build
-            - target/debug/deps
           key: v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
 
       # DISABLED:

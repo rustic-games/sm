@@ -61,7 +61,6 @@ install:
 build: "off"
 
 test_script:
-  - cd sm
   - cargo build --all --all-targets
   - cargo test --all
   - cargo bench --all
