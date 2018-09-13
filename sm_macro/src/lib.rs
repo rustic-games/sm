@@ -503,7 +503,7 @@ macro_rules! sm {
                 sm!{@recurse ($($state),*), ()}
 
                 $(
-                    #[derive(PartialEq, Eq, Debug)]
+                    #[derive(Copy, Clone, PartialEq, Eq, Debug)]
                     pub struct $event;
                     impl Event for $event {}
 

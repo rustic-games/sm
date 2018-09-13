@@ -47,7 +47,7 @@ pub trait State: fmt::Debug + Eq + Clone {}
 ///
 /// [m]: https://doc.rust-lang.org/std/marker/index.html
 /// [u]: https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields
-pub trait Event: fmt::Debug + Eq {}
+pub trait Event: fmt::Debug + Eq + Clone {}
 
 /// Machine provides the method required to query a state machine for its
 /// current state.
