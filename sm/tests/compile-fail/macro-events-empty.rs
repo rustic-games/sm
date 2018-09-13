@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate sm;
+extern crate sm_macro;
 
 sm!{
     Lock {

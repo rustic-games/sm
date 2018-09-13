@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate criterion;
 #[macro_use]
-extern crate sm;
+extern crate sm_macro;
 
 use criterion::Criterion;
 
