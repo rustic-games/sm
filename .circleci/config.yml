@@ -1,15 +1,13 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/project/sm
     branches:
       ignore:
         - gh-pages
     docker:
       - image: rust:1
     steps:
-      - checkout:
-          path: ~/project
+      - checkout
       - run:
           name: Switch to nightly rust
           command: rustup default nightly
