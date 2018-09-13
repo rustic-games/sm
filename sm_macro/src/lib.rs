@@ -509,8 +509,10 @@ macro_rules! sm {
 
                     $(
                         $(
-                            impl Transition<Machine<$to>, $event> for Machine<$from> {
-                                fn transition(self, _: $event) -> Machine<$to> {
+                            impl Transition<$event> for Machine<$from> {
+                                type Machine = Machine<$to>;
+
+                                fn transition(self, _: $event) -> Self::Machine {
                                     Machine::new($to)
                                 }
                             }
