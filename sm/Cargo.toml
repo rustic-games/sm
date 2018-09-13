@@ -11,11 +11,6 @@ readme = "README.md"
 
 [dev-dependencies]
 compiletest_rs = "0.3"
-criterion = { version = "0.2", features = ["real_blackbox"] }
-
-[[bench]]
-name = "sm"
-harness = false
 
 [badges]
 circle-ci = { repository = "rusty-rockets/sm" }
