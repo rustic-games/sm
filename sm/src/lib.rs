@@ -56,7 +56,7 @@ pub trait Event: fmt::Debug + Eq + Clone {}
 /// this trait.
 pub trait Machine: fmt::Debug + Eq {
     /// State represents the current (static) state of the state machine.
-    type State;
+    type State: State;
 
     /// state is a convenience method to query the current state of the state
     /// machine.
