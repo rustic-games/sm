@@ -79,7 +79,7 @@ pub trait Transition<T, E> {
 ///
 /// If you are using the `sm!` macro, then there is no need to interact with
 /// this trait.
-pub trait AsEnum<S: State> {
+pub trait AsEnum: fmt::Debug {
     /// Enum is an enum that represents the current state machine as an enum
     /// variant.
     type Enum;

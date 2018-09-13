@@ -491,7 +491,7 @@ macro_rules! sm {
                 }
 
                 $(
-                    impl AsEnum<$state> for Machine<$state> {
+                    impl AsEnum for Machine<$state> {
                         type Enum = States;
 
                         fn as_enum(self) -> Self::Enum {
