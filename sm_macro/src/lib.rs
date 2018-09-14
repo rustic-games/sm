@@ -407,6 +407,9 @@
 //! **Go forth and transition!**
 
 #![no_std]
+// quote! macro needs a higher recursion limit
+#![recursion_limit = "128"]
+#![feature(alloc)]
 #![forbid(
     future_incompatible,
     macro_use_extern_crate,
@@ -432,6 +435,13 @@
 )]
 #![feature(tool_lints)]
 #![deny(clippy::all)]
+
+extern crate alloc;
+extern crate proc_macro2;
+extern crate quote;
+extern crate syn;
+
+mod sm;
 
 /// Generate the declaratively described state machine diagram.
 ///
