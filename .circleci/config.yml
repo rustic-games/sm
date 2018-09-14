@@ -90,6 +90,16 @@ jobs:
           name: Run all benchmarks
           command: cargo bench --all
 
+      - run:
+          name: Run integration tests
+          command: |
+            cd test_suite/deps
+            cargo clean
+            cargo update
+            cargo build
+            cd ..
+            cargo test --features unstable
+
       - save_cache:
           key: source-v1-{{ .Branch }}-{{ .Revision }}
           paths:

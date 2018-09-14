@@ -1,0 +1,11 @@
+[package]
+name = "sm_test_suite_deps"
+version = "0.0.0"
+authors = ["Jean Mertz <helloworld@rustic.games>"]
+publish = false
+
+[workspace]
+
+[dependencies]
+sm = { path = "../../sm" }
+sm_macro = { path = "../../sm_macro" }

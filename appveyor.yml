@@ -64,3 +64,10 @@ test_script:
   - cargo build --all --all-targets
   - cargo test --all
   - cargo bench --all
+
+  - cd test_suite/deps
+  - cargo clean
+  - cargo update
+  - cargo build
+  - cd ..
+  - cargo test --features unstable

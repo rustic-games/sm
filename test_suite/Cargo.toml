@@ -1,0 +1,15 @@
+[package]
+name = "sm_test_suite"
+version = "0.0.0"
+authors = ["Jean Mertz <helloworld@rustic.games>"]
+publish = false
+
+[features]
+unstable = ["compiletest_rs"]
+
+[dev-dependencies]
+sm = { path = "../sm" }
+sm_macro = { path = "../sm_macro" }
+
+[dependencies]
+compiletest_rs = { version = "0.3", optional = true }
