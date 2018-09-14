@@ -25,13 +25,3 @@ circle-ci = { repository = "rusty-rockets/sm" }
 appveyor = { repository = "rusty-rockets/sm", service = "github" }
 codecov = { repository = "rusty-rockets/sm", branch = "master", service = "github" }
 is-it-maintained-issue-resolution = { repository = "rusty-rockets/sm" }
-
-[package.metadata.release]
-dev-version-ext = "dev"
-doc-branch = "gh-pages"
-doc-commit-message = "chore(release): generate documentation"
-pre-release-commit-message = "chore(release): publish {{version}}"
-pro-release-commit-message = "chore(release): start {{version}} iteration"
-sign-commit = true
-tag-message = "release {{version}}"
-upload-doc = true
