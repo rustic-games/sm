@@ -418,7 +418,6 @@
     missing_docs,
     nonstandard_style,
     rust_2018_compatibility,
-    single_use_lifetimes,
     trivial_casts,
     trivial_numeric_casts,
     unsafe_code,
@@ -427,6 +426,7 @@
 #![warn(
     non_snake_case,
     rust_2018_idioms,
+    single_use_lifetimes,
     unused_import_braces,
     unused_lifetimes,
     unused_qualifications,
