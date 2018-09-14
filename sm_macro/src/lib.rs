@@ -408,7 +408,7 @@
 
 #![no_std]
 // quote! macro needs a higher recursion limit
-#![recursion_limit = "128"]
+#![recursion_limit = "256"]
 #![feature(alloc)]
 #![forbid(
     future_incompatible,
