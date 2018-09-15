@@ -1,5 +1,5 @@
-extern crate sm_macro;
-use sm_macro::sm;
+extern crate sm;
+use sm::sm;
 
 sm!{
     TurnStile {
