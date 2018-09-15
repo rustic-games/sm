@@ -31,7 +31,8 @@
 //! ### Quick Example
 //!
 //! ```rust
-//! #[macro_use] extern crate sm_macro;
+//! extern crate sm_macro;
+//! use sm_macro::sm;
 //!
 //! sm! {
 //!     Lock {
@@ -70,13 +71,15 @@
 //! First, we import the macro from the crate:
 //!
 //! ```rust
-//! #[macro_use] extern crate sm_macro;
+//! extern crate sm_macro;
+//! use sm_macro::sm;
 //! ```
 //!
 //! Next, we initiate the macro declaration:
 //!
 //! ```rust
-//! # #[macro_use] extern crate sm_macro;
+//! # extern crate sm_macro;
+//! # use sm_macro::sm;
 //! sm! {
 //! #   Lock {
 //! #       States { Locked, Unlocked, Broken }
@@ -89,7 +92,8 @@
 //! Then, provide a name for the machine, and declare its states:
 //!
 //! ```rust
-//! # #[macro_use] extern crate sm_macro;
+//! # extern crate sm_macro;
+//! # use sm_macro::sm;
 //! # sm! {
 //!     Lock {
 //!         States { Locked, Unlocked, Broken }
@@ -102,7 +106,8 @@
 //! Finally, we declare one or more events and the associated transitions:
 //!
 //! ```rust
-//! # #[macro_use] extern crate sm_macro;
+//! # extern crate sm_macro;
+//! # use sm_macro::sm;
 //! # sm! {
 //! #   Lock {
 //! #       States { Locked, Unlocked, Broken }
@@ -130,7 +135,8 @@
 //! You can initialise the machine as follows:
 //!
 //! ```rust
-//! # #[macro_use] extern crate sm_macro;
+//! # extern crate sm_macro;
+//! # use sm_macro::sm;
 //! # sm! {
 //! #   Lock {
 //! #       States { Locked, Unlocked, Broken }
@@ -155,7 +161,8 @@
 //! We can make this a bit less verbose by bringing our machine into scope:
 //!
 //! ```rust
-//! # #[macro_use] extern crate sm_macro;
+//! # extern crate sm_macro;
+//! # use sm_macro::sm;
 //! # sm! {
 //! #   Lock {
 //! #       States { Locked, Unlocked, Broken }
@@ -182,7 +189,8 @@
 //! state of the machine by sending the `state()` method to the machine:
 //!
 //! ```rust
-//! # #[macro_use] extern crate sm_macro;
+//! # extern crate sm_macro;
+//! # use sm_macro::sm;
 //! # sm! {
 //! #   Lock {
 //! #       States { Locked, Unlocked, Broken }
@@ -223,7 +231,8 @@
 //! Using the enum type and pattern matching, you are able to do the following:
 //!
 //! ```rust
-//! # #[macro_use] extern crate sm_macro;
+//! # extern crate sm_macro;
+//! # use sm_macro::sm;
 //! # sm! {
 //! #   Lock {
 //! #       States { Locked, Unlocked, Broken }
@@ -262,7 +271,8 @@
 //! `Unlocked` state by sending the `TurnKey` event:
 //!
 //! ```rust
-//! # #[macro_use] extern crate sm_macro;
+//! # extern crate sm_macro;
+//! # use sm_macro::sm;
 //! # sm! {
 //! #   Lock {
 //! #       States { Locked, Unlocked, Broken }
@@ -300,7 +310,8 @@
 //! fail to compile:
 //!
 //! ```rust,compile_fail
-//! # #[macro_use] extern crate sm_macro;
+//! # extern crate sm_macro;
+//! # use sm_macro::sm;
 //! # sm! {
 //! #   Lock {
 //! #       States { Locked, Unlocked, Broken }
@@ -343,7 +354,8 @@
 //! the compiler:
 //!
 //! ```rust,compile_fail
-//! # #[macro_use] extern crate sm_macro;
+//! # extern crate sm_macro;
+//! # use sm_macro::sm;
 //! # sm! {
 //! #   Lock {
 //! #       States { Locked, Unlocked, Broken }
