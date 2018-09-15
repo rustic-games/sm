@@ -19,6 +19,9 @@ syn = "0.15"
 criterion = { version = "0.2", features = ["real_blackbox"] }
 sm = { path = "../sm" }
 
+[lib]
+proc-macro = true
+
 [[bench]]
 name = "sm"
 harness = false

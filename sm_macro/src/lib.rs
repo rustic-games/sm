@@ -410,12 +410,12 @@
 // quote! macro needs a higher recursion limit
 #![recursion_limit = "256"]
 #![feature(alloc)]
+#![feature(proc_macro_diagnostic)]
 #![forbid(
     future_incompatible,
     macro_use_extern_crate,
     missing_copy_implementations,
     missing_debug_implementations,
-    missing_docs,
     nonstandard_style,
     rust_2018_compatibility,
     trivial_casts,
@@ -424,6 +424,7 @@
     variant_size_differences,
 )]
 #![warn(
+    missing_docs,
     non_snake_case,
     rust_2018_idioms,
     single_use_lifetimes,
@@ -437,190 +438,24 @@
 #![deny(clippy::all)]
 
 extern crate alloc;
+extern crate proc_macro;
 extern crate proc_macro2;
 extern crate quote;
 extern crate syn;
+
+use proc_macro::TokenStream;
+use quote::quote;
+use sm::machine::Machines;
+use syn::parse_macro_input;
 
 mod sm;
 
 /// Generate the declaratively described state machine diagram.
 ///
 /// See the main crate documentation for more details.
-#[macro_export]
-macro_rules! sm {
-    (
-        $($name:ident {
-            States { $($state:ident),+ $(,)* }
+#[proc_macro]
+pub fn sm(input: TokenStream) -> TokenStream {
+    let machines: Machines = parse_macro_input!(input as Machines);
 
-            $($event:ident {
-                $($($from:ident),+ => $to:ident)+
-            })*
-        })+
-    ) => {
-        extern crate sm;
-        use self::sm::{AsEnum, Machine as M, Transition};
-
-        $(
-            #[allow(non_snake_case)]
-            pub mod $name {
-                extern crate sm;
-                use self::sm::{AsEnum, Event, Machine as M, State, Transition};
-
-                #[derive(PartialEq, Eq, Debug)]
-                pub struct Machine<S: State>(pub S);
-
-                impl<S> M for Machine<S> where S: State {
-                    type State = S;
-
-                    fn state(&self) -> S {
-                        self.0.clone()
-                    }
-                }
-
-                impl<S> Machine<S> where S: State {
-                    pub fn new(state: S) -> Self {
-                        Machine(state)
-                    }
-                }
-
-                $(
-                    #[derive(Copy, Clone, Eq, Debug)]
-                    pub struct $state;
-                    impl State for $state {}
-
-                    impl PartialEq<$state> for $state {
-                        fn eq(&self, _: & $state) -> bool {
-                            true
-                        }
-                    }
-                )*
-
-                #[derive(Debug)]
-                pub enum States {
-                    $($state(Machine<$state>)),*
-                }
-
-                $(
-                    impl AsEnum for Machine<$state> {
-                        type Enum = States;
-
-                        fn as_enum(self) -> Self::Enum {
-                            States::$state(self)
-                        }
-                    }
-                )*
-
-                sm!{@recurse ($($state),*), ()}
-
-                $(
-                    #[derive(Copy, Clone, PartialEq, Eq, Debug)]
-                    pub struct $event;
-                    impl Event for $event {}
-
-                    $(
-                        $(
-                            impl Transition<$event> for Machine<$from> {
-                                type Machine = Machine<$to>;
-
-                                fn transition(self, _: $event) -> Self::Machine {
-                                    Machine::new($to)
-                                }
-                            }
-                        )*
-                    )*
-                )*
-            }
-        )*
-    };
-
-    (@recurse ($state:ident, $($other:ident),+), ($($old:ident),*)) => {
-        $(
-            impl PartialEq<$other> for $state {
-                fn eq(&self, _: & $other) -> bool {
-                    false
-                }
-            }
-        )*
-
-        $(
-            impl PartialEq<$old> for $state {
-                fn eq(&self, _: & $old) -> bool {
-                    false
-                }
-            }
-        )*
-
-        sm!{@recurse ($($other),*), ($($old,)* $state)}
-    };
-
-    (@recurse ($state:ident), ($($old:ident),*)) => {
-        $(
-            impl PartialEq<$old> for $state {
-                fn eq(&self, _: & $old) -> bool {
-                    false
-                }
-            }
-        )*
-    };
-}
-
-#[cfg(test)]
-mod tests {
-    sm!{
-        GameLoop {
-            States { Idle, Simulating, Rendering }
-
-            None {
-                Simulating,
-                Rendering,
-                Idle => Idle
-            }
-
-            Simulate {
-                Idle => Simulating
-            }
-
-            Render {
-                Idle => Rendering
-            }
-        }
-    }
-
-    #[test]
-    fn it_works() {
-        use self::GameLoop::*;
-
-        let sm1 = Machine::new(Idle);
-        assert_eq!(sm1, Machine(Idle));
-        assert_eq!(sm1.state(), Idle);
-
-        let sm2 = sm1.transition(Simulate);
-        assert_eq!(sm2, Machine(Simulating));
-        assert_eq!(sm2.state(), Simulating);
-
-        let sm3 = sm2.transition(None);
-        assert_eq!(sm3, Machine(Idle));
-        assert_eq!(sm3.state(), Idle);
-
-        let sm4 = sm3.transition(Render);
-        assert_eq!(sm4, Machine(Rendering));
-        assert_eq!(sm4.state(), Rendering);
-
-        let sm5 = sm4.transition(None);
-        assert_eq!(sm5, Machine(Idle));
-
-        let sm6 = sm5.transition(None);
-        assert_eq!(sm6, Machine(Idle));
-
-        let state = sm6.state();
-        assert_eq!(state, Idle);
-        assert_ne!(state, Rendering);
-        assert_ne!(state, Simulating);
-
-        match sm6.as_enum() {
-            States::Idle(_) => assert_eq!(state, Idle),
-            States::Simulating(_) => assert_eq!(state, Simulating),
-            States::Rendering(_) => assert_eq!(state, Rendering),
-        }
-    }
+    quote!(#machines).into()
 }
