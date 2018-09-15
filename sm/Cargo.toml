@@ -9,8 +9,16 @@ keywords = ["fsm", "state", "state-machine"]
 categories = ["game-engines", "no-std", "simulation", "science", "visualization"]
 readme = "README.md"
 
+[dependencies]
+sm_macro = { path = "../sm_macro", optional = true }
+
 [dev-dependencies]
 compiletest_rs = "0.3"
+sm_macro = { path = "../sm_macro" }
+
+[features]
+macro = ["sm_macro"]
+default = ["macro"]
 
 [badges]
 circle-ci = { repository = "rusty-rockets/sm" }

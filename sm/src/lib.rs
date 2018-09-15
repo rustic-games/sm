@@ -29,6 +29,11 @@
 
 use core::fmt;
 
+#[cfg(feature = "macro")]
+extern crate sm_macro;
+#[cfg(feature = "macro")]
+pub use sm_macro::sm;
+
 /// State is a custom [marker trait][m] that allows [unit-like structs][u] to be
 /// used as states in a state machine.
 ///

@@ -12,12 +12,10 @@ readme = "README.md"
 [dependencies]
 proc-macro2 = "0.4"
 quote = "0.6"
-sm = { path = "../sm" }
 syn = "0.15"
 
 [dev-dependencies]
 criterion = { version = "0.2", features = ["real_blackbox"] }
-sm = { path = "../sm" }
 
 [lib]
 proc-macro = true
