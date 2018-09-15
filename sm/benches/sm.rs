@@ -1,9 +1,9 @@
 #[macro_use]
 extern crate criterion;
-extern crate sm_macro;
+extern crate sm;
 
 use criterion::Criterion;
-use sm_macro::sm;
+use sm::sm;
 
 sm!{
     GameLoop {

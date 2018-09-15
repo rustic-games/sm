@@ -14,15 +14,8 @@ proc-macro2 = "0.4"
 quote = "0.6"
 syn = "0.15"
 
-[dev-dependencies]
-criterion = { version = "0.2", features = ["real_blackbox"] }
-
 [lib]
 proc-macro = true
-
-[[bench]]
-name = "sm"
-harness = false
 
 [badges]
 circle-ci = { repository = "rusty-rockets/sm" }
