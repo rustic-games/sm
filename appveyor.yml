@@ -39,10 +39,12 @@ environment:
   #   - channel: beta
   #     target: i686-pc-windows-gnu
   # Nightly 64-bit GNU
-    - channel: nightly
+    # nightly pinned at 2018-09-14, because of missing clippy on latest
+    # see: https://mexus.github.io/rustup-components-history/
+    - channel: nightly-2018-09-14
       target: x86_64-pc-windows-gnu
   # Nightly 32-bit GNU
-    - channel: nightly
+    - channel: nightly-2018-09-14
       target: i686-pc-windows-gnu
 
 matrix:
