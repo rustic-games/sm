@@ -1,12 +1,11 @@
-#[macro_use]
 extern crate sm_macro;
+use sm_macro::sm;
 
 sm! {
     TurnStile {
         States { Locked }
 
         Coin {}
-        //~^ ERROR no rules expected the token `}`
     }
 }
 

@@ -1,9 +1,9 @@
-#[macro_use]
 extern crate sm_macro;
+use sm_macro::sm;
 
 sm!{
     Lock {
         InvalidName { Locked, Unlocked }
-        //~^ ERROR no rules expected the token `InvalidName`
+        //~^ ERROR expected `States { ... }` block
     }
 }

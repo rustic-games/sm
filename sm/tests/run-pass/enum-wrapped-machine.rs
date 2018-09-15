@@ -1,5 +1,5 @@
-#[macro_use]
 extern crate sm_macro;
+use sm_macro::sm;
 
 sm!{
     Lock {

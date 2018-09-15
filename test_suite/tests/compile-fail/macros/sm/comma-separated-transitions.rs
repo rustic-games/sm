@@ -1,14 +1,14 @@
-#[macro_use]
 extern crate sm_macro;
+use sm_macro::sm;
 
 sm!{
     Lock {
         States { Locked, Unlocked }
 
         TurnKey {
-            // TODO: support both with and without comma separation?
+        //~^ ERROR unexpected end of input, expected identifier
             Locked => Unlocked,
-            //~^ ERROR no rules expected the token `,`
+            // TODO: support both with and without comma separation?
             Unlocked => Locked,
         }
     }

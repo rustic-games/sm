@@ -3,10 +3,10 @@ use sm_macro::sm;
 
 sm!{
     Lock {
-        States {
-            Locked,
-            Unlocked,
-            Broken,
+        States { Unlocked }
+
+        TurnKey {
+            Unlocked => Locked
         }
     }
 }

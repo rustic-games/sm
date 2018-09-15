@@ -1,4 +1,3 @@
-#[macro_use]
 extern crate sm;
 
 #[derive(Eq, PartialEq)]

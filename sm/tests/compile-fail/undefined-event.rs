@@ -1,9 +1,11 @@
-#[macro_use]
 extern crate sm_macro;
+use sm_macro::sm;
 
 sm!{
     Lock {
         States { Locked }
+
+        TurnKey { Unlocked => Locked }
     }
 }
 
@@ -12,6 +14,6 @@ fn main() {
     let sm = Machine::new(Locked);
 
     sm.transition(Invalid);
-    //~^ ERROR no method named `transition` found for type `Lock::Machine<Lock::Locked>` in the current scope
-    //~^^ ERROR cannot find value `Invalid` in this scope
+    //~^ ERROR cannot find value `Invalid` in this scope
+    //~| ERROR no method named `transition` found for type `Lock::Machine<Lock::Locked>` in the current scope
 }

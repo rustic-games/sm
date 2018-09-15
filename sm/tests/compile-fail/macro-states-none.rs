@@ -1,7 +1,7 @@
-#[macro_use]
 extern crate sm_macro;
+use sm_macro::sm;
 
 sm!{
     Lock {}
-    //~^ ERROR no rules expected the token `}`
+    //~^ ERROR unexpected end of input, expected identifier
 }
