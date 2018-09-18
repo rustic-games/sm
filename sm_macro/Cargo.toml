@@ -7,7 +7,7 @@ description = "💋 SM – a static State Machine macro"
 repository = "https://github.com/rusty-rockets/sm"
 keywords = ["fsm", "state", "state-machine"]
 categories = ["game-engines", "no-std", "simulation", "science", "visualization"]
-readme = "README.md"
+readme = "crates-io.md"
 
 [dependencies]
 proc-macro2 = "0.4"

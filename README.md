@@ -12,13 +12,13 @@ will be maintained.**_
 
 SM aims to be a **safe**, **fast** and **simple** state machine library.
 
-* **safe** — Rust's type system, ownership model and exhaustive pattern matching
+- **safe** — Rust's type system, ownership model and exhaustive pattern matching
   prevent you from mis-using your state machines
 
-* **fast** — zero runtime overhead, the machine is 100% static, all validation
+- **fast** — zero runtime overhead, the machine is 100% static, all validation
   happens at compile-time
 
-* **simple** — five traits, and one optional declarative macro, control-flow
+- **simple** — five traits, and one optional declarative macro, control-flow
   only, no business logic attached
 
 ---
