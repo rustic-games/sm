@@ -44,18 +44,17 @@
 //!         }
 //!
 //!         Break {
-//!             Locked => Broken
-//!             Unlocked => Broken
+//!             Locked, Unlocked => Broken
 //!         }
 //!     }
 //! }
 //!
 //! fn main() {
 //!     use Lock::*;
-//!     let sm = Machine::new(Locked);
-//!     let sm = sm.transition(TurnKey);
+//!     let lock = Machine::new(Locked);
+//!     let lock = lock.transition(TurnKey);
 //!
-//!     assert_eq!(sm.state(), Unlocked);
+//!     assert_eq!(lock.state(), Unlocked);
 //! }
 //! ```
 //!
@@ -118,8 +117,7 @@
 //!         }
 //!
 //!         Break {
-//!             Locked => Broken
-//!             Unlocked => Broken
+//!             Locked, Unlocked => Broken
 //!         }
 //!     }
 //! }
@@ -147,8 +145,7 @@
 //! #       }
 //! #
 //! #       Break {
-//! #           Locked => Broken
-//! #           Unlocked => Broken
+//! #           Locked, Unlocked => Broken
 //! #       }
 //! #   }
 //! # }
@@ -173,8 +170,7 @@
 //! #       }
 //! #
 //! #       Break {
-//! #           Locked => Broken
-//! #           Unlocked => Broken
+//! #           Locked, Unlocked => Broken
 //! #       }
 //! #   }
 //! # }
@@ -201,8 +197,7 @@
 //! #       }
 //! #
 //! #       Break {
-//! #           Locked => Broken
-//! #           Unlocked => Broken
+//! #           Locked, Unlocked => Broken
 //! #       }
 //! #   }
 //! # }
@@ -243,8 +238,7 @@
 //! #       }
 //! #
 //! #       Break {
-//! #           Locked => Broken
-//! #           Unlocked => Broken
+//! #           Locked, Unlocked => Broken
 //! #       }
 //! #   }
 //! # }
@@ -283,8 +277,7 @@
 //! #       }
 //! #
 //! #       Break {
-//! #           Locked => Broken
-//! #           Unlocked => Broken
+//! #           Locked, Unlocked => Broken
 //! #       }
 //! #   }
 //! # }
@@ -322,8 +315,7 @@
 //! #       }
 //! #
 //! #       Break {
-//! #           Locked => Broken
-//! #           Unlocked => Broken
+//! #           Locked, Unlocked => Broken
 //! #       }
 //! #   }
 //! # }
@@ -366,8 +358,7 @@
 //! #       }
 //! #
 //! #       Break {
-//! #           Locked => Broken
-//! #           Unlocked => Broken
+//! #           Locked, Unlocked => Broken
 //! #       }
 //! #   }
 //! # }
