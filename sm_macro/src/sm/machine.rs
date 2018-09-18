@@ -203,7 +203,7 @@ mod tests {
 
     #[test]
     fn test_machine_parse() {
-        let expected: Machine = syn::parse2(quote! {
+        let left: Machine = syn::parse2(quote! {
            TurnStile {
                States { Locked, Unlocked }
 
@@ -212,7 +212,7 @@ mod tests {
            }
         }).unwrap();
 
-        let actual = Machine {
+        let right = Machine {
             name: parse_quote! { TurnStile },
             transitions: Transitions(vec![
                 Transition {
@@ -240,7 +240,7 @@ mod tests {
             ]),
         };
 
-        assert_eq!(expected, actual);
+        assert_eq!(left, right);
     }
 
     #[test]
@@ -260,7 +260,7 @@ mod tests {
             }]),
         };
 
-        let expected = quote! {
+        let left = quote! {
             #[allow(non_snake_case)]
             mod TurnStile {
                 use _sm::{AsEnum, Event, Machine as M, State, Transition};
@@ -356,15 +356,15 @@ mod tests {
             }
         };
 
-        let mut actual = TokenStream::new();
-        machine.to_tokens(&mut actual);
+        let mut right = TokenStream::new();
+        machine.to_tokens(&mut right);
 
-        assert_eq!(format!("{}", expected), format!("{}", actual))
+        assert_eq!(format!("{}", left), format!("{}", right))
     }
 
     #[test]
     fn test_machines_parse() {
-        let expected: Machines = syn::parse2(quote! {
+        let left: Machines = syn::parse2(quote! {
            TurnStile {
                States { Locked, Unlocked }
 
@@ -382,7 +382,7 @@ mod tests {
            }
         }).unwrap();
 
-        let actual = Machines(vec![
+        let right = Machines(vec![
             Machine {
                 name: parse_quote! { TurnStile },
                 transitions: Transitions(vec![
@@ -439,7 +439,7 @@ mod tests {
             },
         ]);
 
-        assert_eq!(expected, actual);
+        assert_eq!(left, right);
     }
 
     #[test]
@@ -501,7 +501,7 @@ mod tests {
             },
         ]);
 
-        let expected = quote! {
+        let left = quote! {
             extern crate sm as _sm;
             use _sm::{AsEnum, Machine as M, Transition};
 
@@ -732,9 +732,9 @@ mod tests {
             }
         };
 
-        let mut actual = TokenStream::new();
-        machines.to_tokens(&mut actual);
+        let mut right = TokenStream::new();
+        machines.to_tokens(&mut right);
 
-        assert_eq!(format!("{}", expected), format!("{}", actual))
+        assert_eq!(format!("{}", left), format!("{}", right))
     }
 }

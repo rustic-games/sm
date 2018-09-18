@@ -125,7 +125,7 @@ mod tests {
             },
         };
 
-        let expected = quote! {
+        let left = quote! {
             impl Transition<Push> for Machine<Locked> {
                 type Machine = Machine<Unlocked>;
 
@@ -135,20 +135,20 @@ mod tests {
             }
         };
 
-        let mut actual = TokenStream::new();
-        transition.to_tokens(&mut actual);
+        let mut right = TokenStream::new();
+        transition.to_tokens(&mut right);
 
-        assert_eq!(format!("{}", expected), format!("{}", actual))
+        assert_eq!(format!("{}", left), format!("{}", right))
     }
 
     #[test]
     fn test_transitions_parse() {
-        let expected: Transitions = syn::parse2(quote! {
+        let left: Transitions = syn::parse2(quote! {
             Push { Locked, Unlocked => Locked }
             Coin { Locked, Unlocked => Unlocked }
         }).unwrap();
 
-        let actual = Transitions(vec![
+        let right = Transitions(vec![
             Transition {
                 event: Event {
                     name: parse_quote! { Push },
@@ -195,7 +195,7 @@ mod tests {
             },
         ]);
 
-        assert_eq!(expected, actual);
+        assert_eq!(left, right);
     }
 
     #[test]
@@ -247,7 +247,7 @@ mod tests {
             },
         ]);
 
-        let expected = quote! {
+        let left = quote! {
             impl Transition<Push> for Machine<Locked> {
                 type Machine = Machine<Locked>;
 
@@ -281,9 +281,9 @@ mod tests {
             }
         };
 
-        let mut actual = TokenStream::new();
-        transitions.to_tokens(&mut actual);
+        let mut right = TokenStream::new();
+        transitions.to_tokens(&mut right);
 
-        assert_eq!(format!("{}", expected), format!("{}", actual))
+        assert_eq!(format!("{}", left), format!("{}", right))
     }
 }

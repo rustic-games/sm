@@ -71,12 +71,12 @@ mod tests {
 
     #[test]
     fn test_event_parse() {
-        let expected: Event = syn::parse2(quote! { Push }).unwrap();
-        let actual = Event {
+        let left: Event = syn::parse2(quote! { Push }).unwrap();
+        let right = Event {
             name: parse_quote! { Push },
         };
 
-        assert_eq!(expected, actual);
+        assert_eq!(left, right);
     }
 
     #[test]
@@ -85,16 +85,16 @@ mod tests {
             name: parse_quote! { Push },
         };
 
-        let expected = quote! {
+        let left = quote! {
             #[derive(Clone, Copy, Debug, Eq)]
             pub struct Push;
             impl Event for Push {}
         };
 
-        let mut actual = TokenStream::new();
-        event.to_tokens(&mut actual);
+        let mut right = TokenStream::new();
+        event.to_tokens(&mut right);
 
-        assert_eq!(format!("{}", expected), format!("{}", actual))
+        assert_eq!(format!("{}", left), format!("{}", right))
     }
 
     #[test]
@@ -108,7 +108,7 @@ mod tests {
             },
         ]);
 
-        let expected = quote! {
+        let left = quote! {
             #[derive(Clone, Copy, Debug, Eq)]
             pub struct Push;
             impl Event for Push {}
@@ -142,9 +142,9 @@ mod tests {
             }
         };
 
-        let mut actual = TokenStream::new();
-        events.to_tokens(&mut actual);
+        let mut right = TokenStream::new();
+        events.to_tokens(&mut right);
 
-        assert_eq!(format!("{}", expected), format!("{}", actual))
+        assert_eq!(format!("{}", left), format!("{}", right))
     }
 }

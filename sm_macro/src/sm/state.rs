@@ -118,12 +118,12 @@ mod tests {
 
     #[test]
     fn test_state_parse() {
-        let expected: State = syn::parse2(quote! { Unlocked }).unwrap();
-        let actual = State {
+        let left: State = syn::parse2(quote! { Unlocked }).unwrap();
+        let right = State {
             name: parse_quote! { Unlocked },
         };
 
-        assert_eq!(expected, actual);
+        assert_eq!(left, right);
     }
 
     #[test]
@@ -132,22 +132,22 @@ mod tests {
             name: parse_quote! { Unlocked },
         };
 
-        let expected = quote! {
+        let left = quote! {
             #[derive(Clone, Copy, Debug, Eq)]
             pub struct Unlocked;
             impl State for Unlocked {}
         };
 
-        let mut actual = TokenStream::new();
-        state.to_tokens(&mut actual);
+        let mut right = TokenStream::new();
+        state.to_tokens(&mut right);
 
-        assert_eq!(format!("{}", expected), format!("{}", actual))
+        assert_eq!(format!("{}", left), format!("{}", right))
     }
 
     #[test]
     fn test_states_parse() {
-        let expected: States = syn::parse2(quote! { States { Locked, Unlocked } }).unwrap();
-        let actual = States(vec![
+        let left: States = syn::parse2(quote! { States { Locked, Unlocked } }).unwrap();
+        let right = States(vec![
             State {
                 name: parse_quote! { Locked },
             },
@@ -156,7 +156,7 @@ mod tests {
             },
         ]);
 
-        assert_eq!(expected, actual);
+        assert_eq!(left, right);
     }
 
     #[test]
@@ -170,7 +170,7 @@ mod tests {
             },
         ]);
 
-        let expected = quote! {
+        let left = quote! {
             #[derive(Clone, Copy, Debug, Eq)]
             pub struct Locked;
             impl State for Locked {}
@@ -204,9 +204,9 @@ mod tests {
             }
         };
 
-        let mut actual = TokenStream::new();
-        states.to_tokens(&mut actual);
+        let mut right = TokenStream::new();
+        states.to_tokens(&mut right);
 
-        assert_eq!(format!("{}", expected), format!("{}", actual))
+        assert_eq!(format!("{}", left), format!("{}", right))
     }
 }
