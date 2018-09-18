@@ -18,7 +18,7 @@ You might be looking for:
 - [Examples][examples]
 - [API documentation][api]
 
-[book]: https://github.com/rusty-rockets/sm/blob/proc-macro/README.md#descriptive-example
+[book]: https://github.com/rusty-rockets/sm/blob/master/README.md#descriptive-example
 [repo]: https://github.com/rusty-rockets/sm
 [examples]: https://github.com/rusty-rockets/sm/tree/master/examples
 [api]: https://docs.rs/sm
