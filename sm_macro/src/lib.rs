@@ -1,17 +1,3 @@
-//! # 💋 SM – a static State Machine library
-//!
-//! SM aims to be a **safe**, **fast** and **simple** macro-based state machine
-//! library.
-//!
-//! * **safe** — the type system, move semantics and exhaustive pattern matching
-//!   prevent you from mis-using your state machines
-//!
-//! * **fast** — near-zero runtime overhead, all validation is done at
-//!   compile-time
-//!
-//! * **simple** — one declarative macro, control-flow only, no business logic
-//!   attached
-//!
 //! This is a support crate that contains the function-like procedural macro to
 //! build state machines using the [sm] crate. All documentation lives in that
 //! crate.
