@@ -16,7 +16,7 @@ sm_macro = { version = "0.6", path = "../sm_macro", optional = true }
 [dev-dependencies]
 compiletest_rs = "0.3"
 criterion = { version = "0.2", features = ["real_blackbox"] }
-sm_macro = { version = "*", path = "../sm_macro" }
+sm_macro = { path = "../sm_macro" }
 
 [features]
 macro = ["sm_macro"]
