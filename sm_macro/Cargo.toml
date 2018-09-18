@@ -1,6 +1,6 @@
 [package]
 name = "sm_macro"
-version = "0.6.0"
+version = "0.6.1-dev"
 authors = ["Jean Mertz <helloworld@rustic.games>"]
 license = "MIT OR Apache-2.0"
 description = "💋 SM – a static State Machine macro"
