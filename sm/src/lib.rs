@@ -1,20 +1,7 @@
-//! # 💋 SM – a static State Machine library
-//!
-//! SM aims to be a **safe**, **fast** and **simple** macro-based state machine
-//! library.
-//!
-//! * **safe** — the type system, move semantics and exhaustive pattern matching
-//!   prevent you from mis-using your state machines
-//!
-//! * **fast** — near-zero runtime overhead, all validation is done at
-//!   compile-time
-//!
-//! * **simple** — one declarative macro, control-flow only, no business logic
-//!   attached
-//!
 //! Using this library, you declaratively define your state machines as as set
-//! of states, connected via transitions, triggered by events. You can query the
-//! current state of the machine, or pattern match all possible states.
+//! of _states_, connected via _transitions_, triggered by _events_. You can
+//! query the current state of the machine, or pattern match all possible
+//! states.
 //!
 //! The implementation ensures a zero-sized abstraction that uses Rust's
 //! type-system and ownership model to guarantee valid transitions between
