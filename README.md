@@ -38,7 +38,8 @@ the state machine.
 ### Quick Example
 
 ```rust
-#[macro_use] extern crate sm;
+extern crate sm;
+use sm::sm;
 
 sm! {
     Lock {
@@ -50,18 +51,17 @@ sm! {
         }
 
         Break {
-            Locked => Broken
-            Unlocked => Broken
+            Locked, Unlocked => Broken
         }
     }
 }
 
 fn main() {
     use Lock::*;
-    let sm = Machine::new(Locked);
-    let sm = sm.transition(TurnKey);
+    let lock = Machine::new(Locked);
+    let lock = lock.transition(TurnKey);
 
-    assert_eq!(sm.state(), Unlocked);
+    assert_eq!(lock.state(), Unlocked);
 }
 ```
 
@@ -77,7 +77,8 @@ events.
 First, we import the macro from the crate:
 
 ```rust
-#[macro_use] extern crate sm;
+extern crate sm;
+use sm::sm;
 ```
 
 Next, we initiate the macro declaration:
@@ -102,8 +103,7 @@ Finally, we declare one or more events and the associated transitions:
         }
 
         Break {
-            Locked => Broken
-            Unlocked => Broken
+            Locked, Unlocked => Broken
         }
     }
 }
