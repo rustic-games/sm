@@ -1,4 +1,4 @@
-<img src="./rocket.svg" width="50" align="left" title="Rusty Rockets">
+<img src="/rocket.svg" width="50" align="left" title="Rusty Rockets">
 
 _SM serves as one of the building blocks for [an open-source game about space
 engineering and exploration][rkt]. **As long as the game is in development, SM
@@ -8,7 +8,7 @@ will be maintained.**_
 
 <br />
 
-<img src="./logo.svg" align="right" title="SM logo by Jean Mertz" width="400" />
+<img src="/logo.svg" align="right" title="SM logo by Jean Mertz" width="400" />
 
 SM aims to be a **safe**, **fast** and **simple** state machine library.
 
