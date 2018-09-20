@@ -130,7 +130,7 @@ mod tests {
                 type Machine = Machine<Unlocked>;
 
                 fn transition(self, _: Push) -> Self::Machine {
-                    Machine::new(Unlocked)
+                    Machine(Unlocked)
                 }
             }
         };
@@ -252,7 +252,7 @@ mod tests {
                 type Machine = Machine<Locked>;
 
                 fn transition(self, _: Push) -> Self::Machine {
-                    Machine::new(Locked)
+                    Machine(Locked)
                 }
             }
 
@@ -260,7 +260,7 @@ mod tests {
                 type Machine = Machine<Locked>;
 
                 fn transition(self, _: Push) -> Self::Machine {
-                    Machine::new(Locked)
+                    Machine(Locked)
                 }
             }
 
@@ -268,7 +268,7 @@ mod tests {
                 type Machine = Machine<Unlocked>;
 
                 fn transition(self, _: Coin) -> Self::Machine {
-                    Machine::new(Unlocked)
+                    Machine(Unlocked)
                 }
             }
 
@@ -276,7 +276,7 @@ mod tests {
                 type Machine = Machine<Unlocked>;
 
                 fn transition(self, _: Coin) -> Self::Machine {
-                    Machine::new(Unlocked)
+                    Machine(Unlocked)
                 }
             }
         };

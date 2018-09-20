@@ -3,7 +3,7 @@ use sm::sm;
 
 sm! {
     TurnStile {
-        States { Locked, Unlocked }
+        InitialStates { Locked, Unlocked }
 
         Coin { Locked => Unlocked }
     }

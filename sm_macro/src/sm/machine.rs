@@ -215,6 +215,7 @@ mod tests {
     use super::*;
     use alloc::{format, vec};
     use proc_macro2::TokenStream;
+    use sm::initial_state::InitialState;
     use sm::transition::Transition;
     use syn;
     use syn::parse_quote;
@@ -223,7 +224,7 @@ mod tests {
     fn test_machine_parse() {
         let left: Machine = syn::parse2(quote! {
            TurnStile {
-               States { Locked, Unlocked }
+               InitialStates { Locked, Unlocked }
 
                Coin { Locked => Unlocked }
                Push { Unlocked => Locked }
@@ -232,6 +233,14 @@ mod tests {
 
         let right = Machine {
             name: parse_quote! { TurnStile },
+            initial_states: InitialStates(vec![
+                InitialState {
+                    name: parse_quote! { Locked },
+                },
+                InitialState {
+                    name: parse_quote! { Unlocked },
+                },
+            ]),
             transitions: Transitions(vec![
                 Transition {
                     event: Event {
@@ -265,6 +274,14 @@ mod tests {
     fn test_machine_to_tokens() {
         let machine = Machine {
             name: parse_quote! { TurnStile },
+            initial_states: InitialStates(vec![
+                InitialState {
+                    name: parse_quote! { Unlocked },
+                },
+                InitialState {
+                    name: parse_quote! { Locked },
+                },
+            ]),
             transitions: Transitions(vec![Transition {
                 event: Event {
                     name: parse_quote! { Push },
@@ -281,10 +298,10 @@ mod tests {
         let left = quote! {
             #[allow(non_snake_case)]
             mod TurnStile {
-                use _sm::{AsEnum, Event, Machine as M, State, Transition};
+                use _sm::{AsEnum, Event, InitialState, Machine as M, NewMachine, State, Transition};
 
                 #[derive(Debug, Eq, PartialEq)]
-                pub struct Machine<S: State>(pub S);
+                pub struct Machine<S: State>(S);
 
                 impl<S: State> M for Machine<S> {
                     type State = S;
@@ -294,8 +311,10 @@ mod tests {
                     }
                 }
 
-                impl<S: State> Machine<S> {
-                    pub fn new(state: S) -> Self {
+                impl<S: InitialState> NewMachine<S> for Machine<S> {
+                    type Machine = Machine<S>;
+
+                    fn new(state: S) -> Self::Machine {
                         Machine(state)
                     }
                 }
@@ -331,6 +350,9 @@ mod tests {
                         true
                     }
                 }
+
+                impl InitialState for Unlocked {}
+                impl InitialState for Locked {}
 
                 #[derive(Clone, Copy, Debug, Eq)]
                 pub struct Push;
@@ -368,7 +390,7 @@ mod tests {
                     type Machine = Machine<Locked>;
 
                     fn transition(self, _: Push) -> Self::Machine {
-                        Machine::new(Locked)
+                        Machine(Locked)
                     }
                 }
             }
@@ -384,14 +406,14 @@ mod tests {
     fn test_machines_parse() {
         let left: Machines = syn::parse2(quote! {
            TurnStile {
-               States { Locked, Unlocked }
+               InitialStates { Locked, Unlocked }
 
                Coin { Locked => Unlocked }
                Push { Unlocked => Locked }
            }
 
            Lock {
-               States { Locked, Unlocked }
+               InitialStates { Locked, Unlocked }
 
                TurnKey {
                    Locked => Unlocked
@@ -403,6 +425,14 @@ mod tests {
         let right = Machines(vec![
             Machine {
                 name: parse_quote! { TurnStile },
+                initial_states: InitialStates(vec![
+                    InitialState {
+                        name: parse_quote! { Locked },
+                    },
+                    InitialState {
+                        name: parse_quote! { Unlocked },
+                    },
+                ]),
                 transitions: Transitions(vec![
                     Transition {
                         event: Event {
@@ -430,6 +460,14 @@ mod tests {
             },
             Machine {
                 name: parse_quote! { Lock },
+                initial_states: InitialStates(vec![
+                    InitialState {
+                        name: parse_quote! { Locked },
+                    },
+                    InitialState {
+                        name: parse_quote! { Unlocked },
+                    },
+                ]),
                 transitions: Transitions(vec![
                     Transition {
                         event: Event {
@@ -465,6 +503,14 @@ mod tests {
         let machines = Machines(vec![
             Machine {
                 name: parse_quote! { TurnStile },
+                initial_states: InitialStates(vec![
+                    InitialState {
+                        name: parse_quote! { Locked },
+                    },
+                    InitialState {
+                        name: parse_quote! { Unlocked },
+                    },
+                ]),
                 transitions: Transitions(vec![
                     Transition {
                         event: Event {
@@ -492,6 +538,14 @@ mod tests {
             },
             Machine {
                 name: parse_quote! { Lock },
+                initial_states: InitialStates(vec![
+                    InitialState {
+                        name: parse_quote! { Locked },
+                    },
+                    InitialState {
+                        name: parse_quote! { Unlocked },
+                    },
+                ]),
                 transitions: Transitions(vec![
                     Transition {
                         event: Event {
@@ -521,14 +575,14 @@ mod tests {
 
         let left = quote! {
             extern crate sm as _sm;
-            use _sm::{AsEnum, Machine as M, Transition};
+            use _sm::{AsEnum, Machine as M, NewMachine, Transition};
 
             #[allow(non_snake_case)]
             mod TurnStile {
-                use _sm::{AsEnum, Event, Machine as M, State, Transition};
+                use _sm::{AsEnum, Event, InitialState, Machine as M, NewMachine, State, Transition};
 
                 #[derive(Debug, Eq, PartialEq)]
-                pub struct Machine<S: State>(pub S);
+                pub struct Machine<S: State>(S);
 
                 impl<S: State> M for Machine<S> {
                     type State = S;
@@ -538,8 +592,10 @@ mod tests {
                     }
                 }
 
-                impl<S: State> Machine<S> {
-                    pub fn new(state: S) -> Self {
+                impl<S: InitialState> NewMachine<S> for Machine<S> {
+                    type Machine = Machine<S>;
+
+                    fn new(state: S) -> Self::Machine {
                         Machine(state)
                     }
                 }
@@ -575,6 +631,9 @@ mod tests {
                         true
                     }
                 }
+
+                impl InitialState for Locked {}
+                impl InitialState for Unlocked {}
 
                 #[derive(Clone, Copy, Debug, Eq)]
                 pub struct Coin;
@@ -634,7 +693,7 @@ mod tests {
                     type Machine = Machine<Unlocked>;
 
                     fn transition(self, _: Coin) -> Self::Machine {
-                        Machine::new(Unlocked)
+                        Machine(Unlocked)
                     }
                 }
 
@@ -642,17 +701,17 @@ mod tests {
                     type Machine = Machine<Locked>;
 
                     fn transition(self, _: Push) -> Self::Machine {
-                        Machine::new(Locked)
+                        Machine(Locked)
                     }
                 }
             }
 
             #[allow(non_snake_case)]
             mod Lock {
-                use _sm::{AsEnum, Event, Machine as M, State, Transition};
+                use _sm::{AsEnum, Event, InitialState, Machine as M, NewMachine, State, Transition};
 
                 #[derive(Debug, Eq, PartialEq)]
-                pub struct Machine<S: State>(pub S);
+                pub struct Machine<S: State>(S);
 
                 impl<S: State> M for Machine<S> {
                     type State = S;
@@ -662,8 +721,10 @@ mod tests {
                     }
                 }
 
-                impl<S: State> Machine<S> {
-                    pub fn new(state: S) -> Self {
+                impl<S: InitialState> NewMachine<S> for Machine<S> {
+                    type Machine = Machine<S>;
+
+                    fn new(state: S) -> Self::Machine {
                         Machine(state)
                     }
                 }
@@ -699,6 +760,9 @@ mod tests {
                         true
                     }
                 }
+
+                impl InitialState for Locked {}
+                impl InitialState for Unlocked {}
 
                 #[derive(Clone, Copy, Debug, Eq)]
                 pub struct TurnKey;
@@ -736,7 +800,7 @@ mod tests {
                     type Machine = Machine<Unlocked>;
 
                     fn transition(self, _: TurnKey) -> Self::Machine {
-                        Machine::new(Unlocked)
+                        Machine(Unlocked)
                     }
                 }
 
@@ -744,7 +808,7 @@ mod tests {
                     type Machine = Machine<Locked>;
 
                     fn transition(self, _: TurnKey) -> Self::Machine {
-                        Machine::new(Locked)
+                        Machine(Locked)
                     }
                 }
             }

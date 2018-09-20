@@ -3,7 +3,7 @@ use sm::sm;
 
 sm!{
     Lock {
-        States { Locked }
+        InitialStates { Locked }
     }
 }
 

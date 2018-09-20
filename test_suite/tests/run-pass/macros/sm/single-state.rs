@@ -3,7 +3,7 @@ use sm::sm;
 
 sm! {
     TurnStile {
-        States { Locked }
+        InitialStates { Locked }
     }
 }
 

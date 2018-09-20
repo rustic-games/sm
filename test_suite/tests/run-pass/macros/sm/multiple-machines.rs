@@ -3,14 +3,14 @@ use sm::sm;
 
 sm!{
     TurnStile {
-        States { Locked, Unlocked }
+        InitialStates { Locked, Unlocked }
 
         Coin { Locked => Unlocked }
         Push { Unlocked => Locked }
     }
 
     Lock {
-        States { Locked, Unlocked }
+        InitialStates { Locked, Unlocked }
 
         TurnKey {
             Locked => Unlocked

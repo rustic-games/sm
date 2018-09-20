@@ -108,21 +108,6 @@ mod tests {
     }
 
     #[test]
-    fn test_states_parse() {
-        let left: States = syn::parse2(quote! { States { Locked, Unlocked } }).unwrap();
-        let right = States(vec![
-            State {
-                name: parse_quote! { Locked },
-            },
-            State {
-                name: parse_quote! { Unlocked },
-            },
-        ]);
-
-        assert_eq!(left, right);
-    }
-
-    #[test]
     fn test_states_to_tokens() {
         let states = States(vec![
             State {

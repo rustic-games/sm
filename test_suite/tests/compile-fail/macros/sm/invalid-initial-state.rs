@@ -12,9 +12,6 @@ sm!{
 fn main() {
     use Lock::*;
 
-    let sm = Machine::new(Locked);
-    while sm.state() == Locked {
-        sm = sm.transition(TurnKey);
-        //~^ ERROR mismatched types
-    }
+    let _sm = Machine::new(Unlocked);
+    //~^ ERROR the trait bound `Lock::Unlocked: sm::InitialState` is not satisfied
 }

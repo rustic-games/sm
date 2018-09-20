@@ -3,7 +3,7 @@ use sm::sm;
 
 sm!{
     Lock {
-        States { 1, 2 }
+        InitialStates { 1, 2 }
         //~^ ERROR expected identifier
     }
 }

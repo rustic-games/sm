@@ -3,7 +3,7 @@ use sm::sm;
 
 sm!{
     Lock {
-        States { Locked, Unlocked }
+        InitialStates { Locked, Unlocked }
 
         TurnKey {
         //~^ ERROR unexpected end of input, expected identifier

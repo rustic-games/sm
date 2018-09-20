@@ -3,7 +3,7 @@ use sm::sm;
 
 sm!{
     Lock {
-        States { Unlocked }
+        InitialStates { Unlocked }
 
         TurnKey {
             Unlocked => Locked
