@@ -96,7 +96,7 @@ impl ToTokens for Transition {
                 type Machine = Machine<#to>;
 
                 fn transition(self, _: #event) -> Self::Machine {
-                    Machine::new(#to)
+                    Machine(#to)
                 }
             }
         });

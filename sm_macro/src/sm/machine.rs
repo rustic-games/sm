@@ -5,6 +5,7 @@ use syn::parse::{Parse, ParseStream, Result};
 use syn::{braced, Ident};
 
 use sm::event::{Event, Events};
+use sm::initial_state::InitialStates;
 use sm::state::{State, States};
 use sm::transition::Transitions;
 
@@ -38,7 +39,7 @@ impl ToTokens for Machines {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         tokens.extend(quote! {
             extern crate sm as _sm;
-            use _sm::{AsEnum, Machine as M, Transition};
+            use _sm::{AsEnum, Machine as M, NewMachine, Transition};
         });
 
         for machine in &self.0 {
@@ -50,6 +51,7 @@ impl ToTokens for Machines {
 #[derive(Debug, PartialEq)]
 pub(crate) struct Machine {
     pub name: Ident,
+    pub initial_states: InitialStates,
     pub transitions: Transitions,
 }
 
@@ -64,6 +66,14 @@ impl Machine {
 
             if !states.iter().any(|s| s.name == t.to.name) {
                 states.push(t.to.clone());
+            }
+        }
+
+        for i in &self.initial_states.0 {
+            if !states.iter().any(|s| s.name == i.name) {
+                states.push(State {
+                    name: i.name.clone(),
+                });
             }
         }
 
@@ -88,7 +98,7 @@ impl Parse for Machine {
     ///
     /// ```text
     /// TurnStile {
-    ///     States { ... }
+    ///     InitialStates { ... }
     ///
     ///     Push { ... }
     ///     Coin { ... }
@@ -105,21 +115,26 @@ impl Parse for Machine {
         let block_machine;
         braced!(block_machine in input);
 
-        // `States { ... }`
-        //  ^^^^^^^^^^^^^^
-        let _ = States::parse(&block_machine)?;
+        // `InitialStates { ... }`
+        //  ^^^^^^^^^^^^^^^^^^^^^
+        let initial_states = InitialStates::parse(&block_machine)?;
 
         // `Push { ... }`
         //  ^^^^^^^^^^^^
         let transitions = Transitions::parse(&block_machine)?;
 
-        Ok(Machine { name, transitions })
+        Ok(Machine {
+            name,
+            initial_states,
+            transitions,
+        })
     }
 }
 
 impl ToTokens for Machine {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let name = &self.name;
+        let initial_states = &self.initial_states;
         let states = &self.states();
         let events = &self.events();
         let machine_enum = MachineEnum { states };
@@ -128,10 +143,10 @@ impl ToTokens for Machine {
         tokens.extend(quote! {
             #[allow(non_snake_case)]
             mod #name {
-                use _sm::{AsEnum, Event, Machine as M, State, Transition};
+                use _sm::{AsEnum, Event, InitialState, Machine as M, NewMachine, State, Transition};
 
                 #[derive(Debug, Eq, PartialEq)]
-                pub struct Machine<S: State>(pub S);
+                pub struct Machine<S: State>(S);
 
                 impl<S: State> M for Machine<S> {
                     type State = S;
@@ -141,13 +156,16 @@ impl ToTokens for Machine {
                     }
                 }
 
-                impl<S: State> Machine<S> {
-                    pub fn new(state: S) -> Self {
+                impl<S: InitialState> NewMachine<S> for Machine<S> {
+                    type Machine = Machine<S>;
+
+                    fn new(state: S) -> Self::Machine {
                         Machine(state)
                     }
                 }
 
                 #states
+                #initial_states
                 #events
                 #machine_enum
                 #transitions

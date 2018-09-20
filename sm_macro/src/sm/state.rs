@@ -3,47 +3,10 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use quote::ToTokens;
 use syn::parse::{Parse, ParseStream, Result};
-use syn::punctuated::Punctuated;
-use syn::{braced, Ident, Token};
+use syn::Ident;
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct States(pub Vec<State>);
-
-impl Parse for States {
-    /// example states tokens:
-    ///
-    /// ```text
-    /// States { Locked, Unlocked }
-    /// ```
-    ///
-    fn parse(input: ParseStream<'_>) -> Result<Self> {
-        let mut states: Vec<State> = Vec::new();
-
-        // `States { ... }`
-        //  ^^^^^^
-        let block_name: Ident = input.parse()?;
-
-        if block_name != "States" {
-            return Err(input.error("expected `States { ... }` block"));
-        }
-
-        // `States { ... }`
-        //           ^^^
-        let block_states;
-        braced!(block_states in input);
-
-        // `States { Locked, Unlocked }`
-        //           ^^^^^^  ^^^^^^^^
-        let punctuated_states: Punctuated<Ident, Token![,]> =
-            block_states.parse_terminated(Ident::parse)?;
-
-        for name in punctuated_states {
-            states.push(State { name });
-        }
-
-        Ok(States(states))
-    }
-}
 
 impl ToTokens for States {
     fn to_tokens(&self, tokens: &mut TokenStream) {

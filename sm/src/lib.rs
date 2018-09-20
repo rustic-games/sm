@@ -440,6 +440,16 @@ pub use sm_macro::sm;
 /// [u]: https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields
 pub trait State: fmt::Debug + Eq + Clone {}
 
+/// InitialState is a custom [marker trait][m] that allows a state to be used as
+/// the initial state in a state machine. This trait is a superset of the
+/// `State` trait.
+///
+/// If you are using the `sm!` macro, then there is no need to interact with
+/// this trait.
+///
+/// [m]: https://doc.rust-lang.org/std/marker/index.html
+pub trait InitialState: State {}
+
 /// Event is a custom [marker trait][m] that allows [unit-like structs][u] to be
 /// used as states in a state machine.
 ///
@@ -459,9 +469,23 @@ pub trait Machine: fmt::Debug + Eq {
     /// State represents the current (static) state of the state machine.
     type State: State;
 
-    /// state is a convenience method to query the current state of the state
-    /// machine.
+    /// state allows you to query the current state of the state machine.
     fn state(&self) -> Self::State;
+}
+
+/// NewMachine defines the `new` method on a machine, that accepts any state
+/// marked as `InitialState`, and returns a new machine.
+///
+/// If you are using the `sm!` macro, then there is no need to interact with
+/// this trait.
+pub trait NewMachine<S: InitialState> {
+    /// Machine represents the machine which the implemented initializer should
+    /// return.
+    type Machine: Machine;
+
+    /// new initializes a new machine, based on the provided `InitialState` as
+    /// input.
+    fn new(state: S) -> Self::Machine;
 }
 
 /// Transition provides the method required to transition from one state to
