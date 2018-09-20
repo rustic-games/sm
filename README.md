@@ -59,7 +59,7 @@ use sm::sm;
 
 sm! {
     Lock {
-        States { Locked, Unlocked, Broken }
+        InitialStates { Locked, Unlocked }
 
         TurnKey {
             Locked => Unlocked
@@ -103,11 +103,12 @@ Next, we initiate the macro declaration:
 sm! {
 ```
 
-Then, provide a name for the machine, and declare its states:
+Then, provide a name for the machine, and declare a list of allowed initial
+states:
 
 ```rust
     Lock {
-        States { Locked, Unlocked, Broken }
+        InitialStates { Locked, Unlocked }
 ```
 
 Finally, we declare one or more events and the associated transitions:
@@ -209,11 +210,11 @@ This fails with the following compilation error:
 
 ```text
 error[E0382]: use of moved value: `sm`
-  --> src/lib.rs:140:12
+  --> src/lib.rs:315:12
    |
-14 | let sm2 = sm.transition(TurnKey);
+22 | let sm2 = sm.transition(TurnKey);
    |           -- value moved here
-15 | assert_eq!(sm.state(), Locked);
+23 | assert_eq!(sm.state(), Locked);
    |            ^^ value used here after move
    |
    = note: move occurs because `sm` has type `Lock::Machine<Lock::Locked>`, which does not implement the `Copy` trait
@@ -223,38 +224,51 @@ Similarly, we cannot execute undefined transitions, these are also caught by
 the compiler:
 
 ```rust
-let sm = sm.transition(TurnKey);
 assert_eq!(sm.state(), Broken);
+
+let sm = sm.transition(TurnKey);
 ```
 
 This fails with the following compilation error:
 
 ```text
 error[E0599]: no method named `transition` found for type `Lock::Machine<Lock::Broken>` in the current scope
-  --> src/lib.rs:246:13
+  --> src/lib.rs:360:13
    |
-3  | / sm! {
-4  | |    Lock { Locked, Unlocked, Broken }
-5  | |    TurnKey {
-6  | |        Locked => Unlocked
-...  |
-13 | |    }
-14 | | }
-   | |_- method `transition` not found for this
+4  | sm! {
+   | --- method `transition` not found for this
 ...
-19 |   let sm = sm.transition(TurnKey);
-   |               ^^^^^^^^^^
+25 | let sm = sm.transition(TurnKey);
+   |             ^^^^^^^^^^
    |
    = help: items from traits can only be used if the trait is implemented and in scope
    = note: the following trait defines an item `transition`, perhaps you need to implement it:
-           candidate #1: `Lock::Transition`
-   = note: this error originates in a macro outside of the current crate (in Nightly builds, run with -Z external-macro-backtrace for more info)
+           candidate #1: `sm::Transition`
 ```
 
 The error message is not great (and can potentially be improved in the
 future), but any error telling you `transition` is not implemented, or the
 passed in event type is invalid is an indication that you are trying to
 execute an illegal state transition.
+
+Finally, we are confined to initializing a new machine in only the states
+that we defined in `InitialStates`:
+
+```rust
+let sm = Machine::new(Broken);
+```
+
+This results in the following error:
+
+```
+error[E0277]: the trait bound `Lock::Broken: sm::InitialState` is not satisfied
+  --> src/lib.rs:417:10
+   |
+21 | let sm = Machine::new(Broken);
+   |          ^^^^^^^^^^^^ the trait `sm::InitialState` is not implemented for `Lock::Broken`
+   |
+   = note: required because of the requirements on the impl of `sm::NewMachine<Lock::Broken>` for `Lock::Machine<Lock::Broken>`
+```
 
 #### The End 👋
 
