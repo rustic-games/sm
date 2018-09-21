@@ -6,7 +6,7 @@ sm! {
         InitialStates { Locked, Unlocked }
 
         TurnKey {
-            Locked,
+            Locked => Unlocked
             Unlocked => Locked
         }
     }
@@ -23,6 +23,7 @@ fn main() {
 
     let sm = sm.transition(TurnKey);
     assert_eq!(sm.state(), Unlocked);
+    assert_eq!(sm.trigger().unwrap(), TurnKey);
 
     let sm = sm.transition(TurnKey);
     assert_eq!(sm.state(), Locked); // change to Unlocked to fail the assertion.

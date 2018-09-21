@@ -383,7 +383,7 @@
 //! passed in event type is invalid is an indication that you are trying to
 //! execute an illegal state transition.
 //!
-//! Finally, we are confined to initializing a new machine in only the states
+//! Finally, we are confined to initialising a new machine in only the states
 //! that we defined in `InitialStates`:
 //!
 //! ```rust,compile_fail
@@ -505,21 +505,33 @@ pub trait Machine: fmt::Debug + Eq {
     /// State represents the current (static) state of the state machine.
     type State: State;
 
+    /// Event represents the (optional) event that resulted in the current state
+    /// of the machine.
+    type Event: Event;
+
     /// state allows you to query the current state of the state machine.
     fn state(&self) -> Self::State;
+
+    /// trigger allows you to query the event that triggered the current state
+    /// of the machine.
+    ///
+    /// This returns an `Option`, which is `None` if the machine is in its
+    /// initial state, caused by initialisation, not by an even-based
+    /// transition.
+    fn trigger(&self) -> Option<Self::Event>;
 }
 
-/// NewMachine defines the `new` method on a machine, that accepts any state
+/// Initializer defines the `new` method on a machine, that accepts any state
 /// marked as `InitialState`, and returns a new machine.
 ///
 /// If you are using the `sm!` macro, then there is no need to interact with
 /// this trait.
-pub trait NewMachine<S: InitialState> {
-    /// Machine represents the machine which the implemented initializer should
+pub trait Initializer<S: InitialState> {
+    /// Machine represents the machine which the implemented initialiser should
     /// return.
-    type Machine: Machine;
+    type Machine: Machine<State = S, Event = NoneEvent>;
 
-    /// new initializes a new machine, based on the provided `InitialState` as
+    /// new initialises a new machine, based on the provided `InitialState` as
     /// input.
     fn new(state: S) -> Self::Machine;
 }
@@ -553,3 +565,26 @@ pub trait AsEnum: fmt::Debug {
     /// represents the consumed state machine.
     fn as_enum(self) -> Self::Enum;
 }
+
+/// NoneEvent is a semi-private event struct that is used to allow the
+/// `Initializer` trait implementations to provide a simple API to initialise a
+/// new machine.
+///
+/// Using this struct, the following works:
+///
+/// ```rust,ignore
+/// let sm = TurnStile::new(Locked); // => TurnStile<Locked, None>
+/// ```
+///
+/// Otherwise, we'd need to provide type annotations (using any available
+/// events) for every machine invocation:
+///
+/// ```rust,ignore
+/// let sm: TurnStile<Locked, Push> = TurnStile::new(Locked); // => TurnStile<Locked, None>
+/// ```
+///
+/// In practice, you will never deal with this struct, as it's used as a
+/// concrete type that is swapped for the `None` option at compile time.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct NoneEvent;
+impl Event for NoneEvent {}

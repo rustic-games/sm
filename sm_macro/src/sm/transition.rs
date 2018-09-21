@@ -92,11 +92,11 @@ impl ToTokens for Transition {
         let to = &self.to.name;
 
         tokens.extend(quote! {
-            impl Transition<#event> for Machine<#from> {
-                type Machine = Machine<#to>;
+            impl<E: Event> Transition<#event> for Machine<#from, E> {
+                type Machine = Machine<#to, #event>;
 
-                fn transition(self, _: #event) -> Self::Machine {
-                    Machine(#to)
+                fn transition(self, event: #event) -> Self::Machine {
+                    Machine(#to, Some(event))
                 }
             }
         });
