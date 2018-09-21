@@ -16,5 +16,5 @@ fn main() {
     let sm = Machine::new(Unlocked);
 
     sm.transition(TurnKey);
-    //~^ ERROR no method named `transition` found for type `Lock::Machine<Lock::Unlocked>` in the current scope
+    //~^ ERROR no method named `transition` found for type `Lock::Machine<Lock::Unlocked, sm::NoneEvent>` in the current scope
 }

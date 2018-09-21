@@ -303,24 +303,29 @@ mod tests {
         let left = quote! {
             #[allow(non_snake_case)]
             mod TurnStile {
-                use _sm::{AsEnum, Event, InitialState, Machine as M, NewMachine, State, Transition};
+                use _sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
 
                 #[derive(Debug, Eq, PartialEq)]
-                pub struct Machine<S: State>(S);
+                pub struct Machine<S: State, E: Event>(S, Option<E>);
 
-                impl<S: State> M for Machine<S> {
+                impl<S: State, E: Event> M for Machine<S, E> {
                     type State = S;
+                    type Event = E;
 
-                    fn state(&self) -> S {
+                    fn state(&self) -> Self::State {
                         self.0.clone()
+                    }
+
+                    fn trigger(&self) -> Option<Self::Event> {
+                        self.1.clone()
                     }
                 }
 
-                impl<S: InitialState> NewMachine<S> for Machine<S> {
-                    type Machine = Machine<S>;
+                impl<S: InitialState> Initializer<S> for Machine<S, NoneEvent> {
+                    type Machine = Machine<S, NoneEvent>;
 
                     fn new(state: S) -> Self::Machine {
-                        Machine(state)
+                        Machine(state, None)
                     }
                 }
 
@@ -370,32 +375,32 @@ mod tests {
                 }
 
                 #[derive(Debug)]
-                pub enum States {
-                    Unlocked(Machine<Unlocked>),
-                    Locked(Machine<Locked>)
+                pub enum States<E: Event> {
+                    Unlocked(Machine<Unlocked, E>),
+                    Locked(Machine<Locked, E>)
                 }
 
-                impl AsEnum for Machine<Unlocked> {
-                    type Enum = States;
+                impl<E: Event> AsEnum for Machine<Unlocked, E> {
+                    type Enum = States<E>;
 
                     fn as_enum(self) -> Self::Enum {
                         States::Unlocked(self)
                     }
                 }
 
-                impl AsEnum for Machine<Locked> {
-                    type Enum = States;
+                impl<E: Event> AsEnum for Machine<Locked, E> {
+                    type Enum = States<E>;
 
                     fn as_enum(self) -> Self::Enum {
                         States::Locked(self)
                     }
                 }
 
-                impl Transition<Push> for Machine<Unlocked> {
-                    type Machine = Machine<Locked>;
+                impl<E: Event> Transition<Push> for Machine<Unlocked, E> {
+                    type Machine = Machine<Locked, Push>;
 
-                    fn transition(self, _: Push) -> Self::Machine {
-                        Machine(Locked)
+                    fn transition(self, event: Push) -> Self::Machine {
+                        Machine(Locked, Some(event))
                     }
                 }
             }
@@ -580,28 +585,33 @@ mod tests {
 
         let left = quote! {
             extern crate sm as _sm;
-            use _sm::{AsEnum, Machine as M, NewMachine, Transition};
+            use _sm::{AsEnum, Initializer, Machine as M, Transition};
 
             #[allow(non_snake_case)]
             mod TurnStile {
-                use _sm::{AsEnum, Event, InitialState, Machine as M, NewMachine, State, Transition};
+                use _sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
 
                 #[derive(Debug, Eq, PartialEq)]
-                pub struct Machine<S: State>(S);
+                pub struct Machine<S: State, E: Event>(S, Option<E>);
 
-                impl<S: State> M for Machine<S> {
+                impl<S: State, E: Event> M for Machine<S, E> {
                     type State = S;
+                    type Event = E;
 
-                    fn state(&self) -> S {
+                    fn state(&self) -> Self::State {
                         self.0.clone()
+                    }
+
+                    fn trigger(&self) -> Option<Self::Event> {
+                        self.1.clone()
                     }
                 }
 
-                impl<S: InitialState> NewMachine<S> for Machine<S> {
-                    type Machine = Machine<S>;
+                impl<S: InitialState> Initializer<S> for Machine<S, NoneEvent> {
+                    type Machine = Machine<S, NoneEvent>;
 
                     fn new(state: S) -> Self::Machine {
-                        Machine(state)
+                        Machine(state, None)
                     }
                 }
 
@@ -673,64 +683,69 @@ mod tests {
                 }
 
                 #[derive(Debug)]
-                pub enum States {
-                    Locked(Machine<Locked>),
-                    Unlocked(Machine<Unlocked>)
+                pub enum States<E: Event> {
+                    Locked(Machine<Locked, E>),
+                    Unlocked(Machine<Unlocked, E>)
                 }
 
-                impl AsEnum for Machine<Locked> {
-                    type Enum = States;
+                impl<E: Event> AsEnum for Machine<Locked, E> {
+                    type Enum = States<E>;
 
                     fn as_enum(self) -> Self::Enum {
                         States::Locked(self)
                     }
                 }
 
-                impl AsEnum for Machine<Unlocked> {
-                    type Enum = States;
+                impl<E: Event> AsEnum for Machine<Unlocked, E> {
+                    type Enum = States<E>;
 
                     fn as_enum(self) -> Self::Enum {
                         States::Unlocked(self)
                     }
                 }
 
-                impl Transition<Coin> for Machine<Locked> {
-                    type Machine = Machine<Unlocked>;
+                impl<E: Event> Transition<Coin> for Machine<Locked, E> {
+                    type Machine = Machine<Unlocked, Coin>;
 
-                    fn transition(self, _: Coin) -> Self::Machine {
-                        Machine(Unlocked)
+                    fn transition(self, event: Coin) -> Self::Machine {
+                        Machine(Unlocked, Some(event))
                     }
                 }
 
-                impl Transition<Push> for Machine<Unlocked> {
-                    type Machine = Machine<Locked>;
+                impl<E: Event> Transition<Push> for Machine<Unlocked, E> {
+                    type Machine = Machine<Locked, Push>;
 
-                    fn transition(self, _: Push) -> Self::Machine {
-                        Machine(Locked)
+                    fn transition(self, event: Push) -> Self::Machine {
+                        Machine(Locked, Some(event))
                     }
                 }
             }
 
             #[allow(non_snake_case)]
             mod Lock {
-                use _sm::{AsEnum, Event, InitialState, Machine as M, NewMachine, State, Transition};
+                use _sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
 
                 #[derive(Debug, Eq, PartialEq)]
-                pub struct Machine<S: State>(S);
+                pub struct Machine<S: State, E: Event>(S, Option<E>);
 
-                impl<S: State> M for Machine<S> {
+                impl<S: State, E: Event> M for Machine<S, E> {
                     type State = S;
+                    type Event = E;
 
-                    fn state(&self) -> S {
+                    fn state(&self) -> Self::State {
                         self.0.clone()
+                    }
+
+                    fn trigger(&self) -> Option<Self::Event> {
+                        self.1.clone()
                     }
                 }
 
-                impl<S: InitialState> NewMachine<S> for Machine<S> {
-                    type Machine = Machine<S>;
+                impl<S: InitialState> Initializer<S> for Machine<S, NoneEvent> {
+                    type Machine = Machine<S, NoneEvent>;
 
                     fn new(state: S) -> Self::Machine {
-                        Machine(state)
+                        Machine(state, None)
                     }
                 }
 
@@ -780,40 +795,40 @@ mod tests {
                 }
 
                 #[derive(Debug)]
-                pub enum States {
-                    Locked(Machine<Locked>),
-                    Unlocked(Machine<Unlocked>)
+                pub enum States<E: Event> {
+                    Locked(Machine<Locked, E>),
+                    Unlocked(Machine<Unlocked, E>)
                 }
 
-                impl AsEnum for Machine<Locked> {
-                    type Enum = States;
+                impl<E: Event> AsEnum for Machine<Locked, E> {
+                    type Enum = States<E>;
 
                     fn as_enum(self) -> Self::Enum {
                         States::Locked(self)
                     }
                 }
 
-                impl AsEnum for Machine<Unlocked> {
-                    type Enum = States;
+                impl<E: Event> AsEnum for Machine<Unlocked, E> {
+                    type Enum = States<E>;
 
                     fn as_enum(self) -> Self::Enum {
                         States::Unlocked(self)
                     }
                 }
 
-                impl Transition<TurnKey> for Machine<Locked> {
-                    type Machine = Machine<Unlocked>;
+                impl<E: Event> Transition<TurnKey> for Machine<Locked, E> {
+                    type Machine = Machine<Unlocked, TurnKey>;
 
-                    fn transition(self, _: TurnKey) -> Self::Machine {
-                        Machine(Unlocked)
+                    fn transition(self, event: TurnKey) -> Self::Machine {
+                        Machine(Unlocked, Some(event))
                     }
                 }
 
-                impl Transition<TurnKey> for Machine<Unlocked> {
-                    type Machine = Machine<Locked>;
+                impl<E: Event> Transition<TurnKey> for Machine<Unlocked, E> {
+                    type Machine = Machine<Locked, TurnKey>;
 
-                    fn transition(self, _: TurnKey) -> Self::Machine {
-                        Machine(Locked)
+                    fn transition(self, event: TurnKey) -> Self::Machine {
+                        Machine(Locked, Some(event))
                     }
                 }
             }

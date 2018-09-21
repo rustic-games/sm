@@ -6,7 +6,7 @@
 
 #![no_std]
 // quote! macro needs a higher recursion limit
-#![recursion_limit = "256"]
+#![recursion_limit = "512"]
 #![feature(alloc)]
 #![feature(proc_macro_diagnostic)]
 #![forbid(

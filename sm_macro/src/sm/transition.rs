@@ -126,11 +126,11 @@ mod tests {
         };
 
         let left = quote! {
-            impl Transition<Push> for Machine<Locked> {
-                type Machine = Machine<Unlocked>;
+            impl<E: Event> Transition<Push> for Machine<Locked, E> {
+                type Machine = Machine<Unlocked, Push>;
 
-                fn transition(self, _: Push) -> Self::Machine {
-                    Machine(Unlocked)
+                fn transition(self, event: Push) -> Self::Machine {
+                    Machine(Unlocked, Some(event))
                 }
             }
         };
@@ -248,35 +248,35 @@ mod tests {
         ]);
 
         let left = quote! {
-            impl Transition<Push> for Machine<Locked> {
-                type Machine = Machine<Locked>;
+            impl<E: Event> Transition<Push> for Machine<Locked, E> {
+                type Machine = Machine<Locked, Push>;
 
-                fn transition(self, _: Push) -> Self::Machine {
-                    Machine(Locked)
+                fn transition(self, event: Push) -> Self::Machine {
+                    Machine(Locked, Some(event))
                 }
             }
 
-            impl Transition<Push> for Machine<Unlocked> {
-                type Machine = Machine<Locked>;
+            impl<E: Event> Transition<Push> for Machine<Unlocked, E> {
+                type Machine = Machine<Locked, Push>;
 
-                fn transition(self, _: Push) -> Self::Machine {
-                    Machine(Locked)
+                fn transition(self, event: Push) -> Self::Machine {
+                    Machine(Locked, Some(event))
                 }
             }
 
-            impl Transition<Coin> for Machine<Locked> {
-                type Machine = Machine<Unlocked>;
+            impl<E: Event> Transition<Coin> for Machine<Locked, E> {
+                type Machine = Machine<Unlocked, Coin>;
 
-                fn transition(self, _: Coin) -> Self::Machine {
-                    Machine(Unlocked)
+                fn transition(self, event: Coin) -> Self::Machine {
+                    Machine(Unlocked, Some(event))
                 }
             }
 
-            impl Transition<Coin> for Machine<Unlocked> {
-                type Machine = Machine<Unlocked>;
+            impl<E: Event> Transition<Coin> for Machine<Unlocked, E> {
+                type Machine = Machine<Unlocked, Coin>;
 
-                fn transition(self, _: Coin) -> Self::Machine {
-                    Machine(Unlocked)
+                fn transition(self, event: Coin) -> Self::Machine {
+                    Machine(Unlocked, Some(event))
                 }
             }
         };
