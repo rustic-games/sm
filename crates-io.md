@@ -50,5 +50,6 @@ fn main() {
     let lock = lock.transition(TurnKey);
 
     assert_eq!(lock.state(), Unlocked);
+    assert_eq!(lock.trigger().unwrap(), TurnKey);
 }
 ```

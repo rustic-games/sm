@@ -42,6 +42,7 @@
 //!     let lock = lock.transition(TurnKey);
 //!
 //!     assert_eq!(lock.state(), Unlocked);
+//!     assert_eq!(lock.trigger().unwrap(), TurnKey);
 //! }
 //! ```
 //!
@@ -249,8 +250,8 @@
 //! new state down the road, but forget to add it to a pattern match somewhere
 //! deep inside your code-base.
 //!
-//! Finally, as per our declaration, we can transition this machine to the
-//! `Unlocked` state by sending the `TurnKey` event:
+//! To transition this machine to the `Unlocked` state, we send the `transition`
+//! method, using the `TurnKey` event:
 //!
 //! ```rust
 //! # extern crate sm;
@@ -278,11 +279,46 @@
 //! # }
 //! ```
 //!
+//! Because multiple events can lead to a single state, it's also important to
+//! be able to determine what event caused the machine to transition to the
+//! current state. We can ask this information using the `trigger()` method:
+//!
+//! ```rust
+//! # extern crate sm;
+//! # use sm::sm;
+//! # sm! {
+//! #   Lock {
+//! #       InitialStates { Locked, Unlocked }
+//! #
+//! #       TurnKey {
+//! #           Locked => Unlocked
+//! #           Unlocked => Locked
+//! #       }
+//! #
+//! #       Break {
+//! #           Locked, Unlocked => Broken
+//! #       }
+//! #   }
+//! # }
+//! #
+//! # fn main() {
+//! # use Lock::*;
+//! # let sm = Machine::new(Locked);
+//! # let sm = sm.transition(TurnKey);
+//! # assert_eq!(sm.state(), Unlocked);
+//! assert_eq!(sm.trigger().unwrap(), TurnKey);
+//! # }
+//! ```
+//!
+//! The `trigger()` method returns `None` if no state transition has taken place
+//! yet (ie. the machine is still in its initial state), and `Some(Event)` if
+//! one or more transitions have taken place.
+//!
 //! #### A word about Type-Safety and Ownership
 //!
 //! It's important to realise that we've _consumed_ the original machine in the
-//! above example, and got a newly initialised machine back in the `Unlocked`
-//! state.
+//! above example when we transitioned the machine to a different state, and got
+//! a newly initialised machine back in the `Unlocked` state.
 //!
 //! This allows us to safely use the machine without having to worry about
 //! multiple readers using the machine in different states.
