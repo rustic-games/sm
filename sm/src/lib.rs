@@ -1,7 +1,7 @@
 //! Using this library, you declaratively define your state machines as as set
 //! of _states_, connected via _transitions_, triggered by _events_. You can
-//! query the current state of the machine, or pattern match all possible
-//! states.
+//! query the current state of the machine, or pattern match against all
+//! possible machine variants.
 //!
 //! The implementation ensures a zero-sized abstraction that uses Rust's
 //! type-system and ownership model to guarantee valid transitions between
@@ -212,7 +212,8 @@
 //! [ZST]:
 //! https://doc.rust-lang.org/nomicon/exotic-sizes.html#zero-sized-types-zsts
 //!
-//! Using the an variant and pattern matching, you are able to do the following:
+//! Using the enum variant and pattern matching, you are able to do the
+//! following:
 //!
 //! ```rust
 //! # extern crate sm;
