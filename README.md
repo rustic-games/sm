@@ -161,20 +161,43 @@ ensure you've covered all possible state variants in your business logic.
 
 While `sm.state()` returns the state as a unit-like struct (which itself is
 a [ZST], or Zero Sized Type), you can use the `sm.as_enum()` method to get
-the state machine wrapped in an enum type.
+the state machine back as an enum variant.
 
 [ZST]:
 https://doc.rust-lang.org/nomicon/exotic-sizes.html#zero-sized-types-zsts
 
-Using the enum type and pattern matching, you are able to do the following:
+Using the an variant and pattern matching, you are able to do the following:
 
 ```rust
+use Lock::Variant::*;
+
 match sm.as_enum() {
-    States::Locked(m) => assert_eq!(m.state(), Locked),
-    States::Unlocked(m) => assert_eq!(m.state(), Unlocked),
-    States::Broken(m) =>  assert_eq!(m.state(), Broken),
+    InitialLocked(m) => {
+        assert_eq!(m.state(), Locked);
+        assert!(m.trigger().is_none());
+    }
+    InitialUnlocked(m) => {
+        assert_eq!(m.state(), Unlocked);
+        assert!(m.trigger().is_none());
+    }
+    LockedByTurnKey(m) => {
+        assert_eq!(m.state(), Locked);
+        assert_eq!(m.trigger().unwrap(), TurnKey);
+    }
+    UnlockedByTurnKey(m) => {
+        assert_eq!(m.state(), Unlocked);
+        assert_eq!(m.trigger().unwrap(), TurnKey);
+    }
+    BrokenByBreak(m) => {
+        assert_eq!(m.state(), Broken);
+        assert_eq!(m.trigger().unwrap(), Break);
+    }
 }
 ```
+
+Each state configured with `InitialStates` has its own variant named
+`Initial<State>`. Next to those, each valid state + event combination also
+has its own variant, named `<state>By<event>`.
 
 The compiler won't be satisfied until you've either exhausted all possible
 enum variants, or you explicitly opt-out of matching all variants, either

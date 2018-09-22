@@ -41,4 +41,31 @@ fn main() {
 
     let sm = sm.transition(Push);
     assert_eq!(sm.state(), Locked); // change to Unlocked to fail the assertion.
+
+    let mut sm = Machine::new(Unlocked).as_enum();
+    use TurnStile::Variant::*;
+
+    loop {
+        sm = match sm {
+            InitialLocked(_) => unreachable!(),
+            InitialUnlocked(m) => {
+                assert_eq!(m.state(), Unlocked);
+                assert!(m.trigger().is_none());
+
+                m.transition(Coin).as_enum()
+            }
+            UnlockedByCoin(m) => {
+                assert_eq!(m.state(), Unlocked);
+                assert_eq!(m.trigger().unwrap(), Coin);
+
+                m.transition(Push).as_enum()
+            }
+            LockedByPush(m) => {
+                assert_eq!(m.state(), Locked);
+                assert_eq!(m.trigger().unwrap(), Push);
+
+                break;
+            }
+        }
+    }
 }
