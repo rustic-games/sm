@@ -1,8 +1,8 @@
-use alloc::vec::Vec;
-use proc_macro2::TokenStream;
+use alloc::{format, vec::Vec};
+use proc_macro2::{Span, TokenStream};
 use quote::{quote, ToTokens};
 use syn::parse::{Parse, ParseStream, Result};
-use syn::{braced, Ident};
+use syn::{braced, parse_quote, Ident};
 
 use sm::event::{Event, Events};
 use sm::initial_state::InitialStates;
@@ -137,7 +137,7 @@ impl ToTokens for Machine {
         let initial_states = &self.initial_states;
         let states = &self.states();
         let events = &self.events();
-        let machine_enum = MachineEnum { states };
+        let machine_enum = MachineEnum { machine: &self };
         let transitions = &self.transitions;
 
         tokens.extend(quote! {
@@ -182,32 +182,56 @@ impl ToTokens for Machine {
 #[derive(Debug)]
 #[allow(single_use_lifetimes)]
 struct MachineEnum<'a> {
-    states: &'a States,
+    machine: &'a Machine,
 }
 
 #[allow(single_use_lifetimes)]
 impl<'a> ToTokens for MachineEnum<'a> {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let states = &self.states.0;
-        let states: &Vec<Ident> = &states.into_iter().map(|s| s.name.clone()).collect();
+        let mut variants = Vec::new();
+        let mut states = Vec::new();
+        let mut events = Vec::new();
 
-        // https://git.io/fArHW
-        let states2 = states;
-        let states3 = states;
-        let states4 = states;
+        for s in &self.machine.initial_states.0 {
+            let name = s.name.clone();
+            let none = parse_quote! { NoneEvent };
+            let variant = Ident::new(&format!("Initial{}", name), Span::call_site());
+
+            variants.push(variant);
+            states.push(name);
+            events.push(none);
+        }
+
+        for t in &self.machine.transitions.0 {
+            let state = t.to.name.clone();
+            let event = t.event.name.clone();
+            let variant = Ident::new(&format!("{}By{}", state, event), Span::call_site());
+
+            if variants.contains(&variant) {
+                continue;
+            }
+
+            variants.push(variant);
+            states.push(state);
+            events.push(event);
+        }
+
+        let variants = &variants;
+        let states = &states;
+        let events = &events;
 
         tokens.extend(quote!{
             #[derive(Debug)]
-            pub enum States<E: Event> {
-                #(#states(Machine<#states2, E>)),*
+            pub enum Variant {
+                #(#variants(Machine<#states, #events>)),*
             }
 
             #(
-                impl<E: Event> AsEnum for Machine<#states3, E> {
-                    type Enum = States<E>;
+                impl AsEnum for Machine<#states, #events> {
+                    type Enum = Variant;
 
                     fn as_enum(self) -> Self::Enum {
-                        States::#states4(self)
+                        Variant::#variants(self)
                     }
                 }
             )*
