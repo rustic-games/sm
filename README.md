@@ -1,8 +1,8 @@
 <img src="/rocket.svg" width="50" align="left" title="Rusty Rockets">
 
 _SM serves as one of the building blocks for [an open-source game about space
-engineering and exploration][rkt]. **As long as the game is in development, SM
-will be maintained.**_
+engineering and exploration][rkt]. **This library is in active use and
+development.**_
 
 [rkt]: https://rustic.games
 
