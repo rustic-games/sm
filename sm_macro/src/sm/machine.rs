@@ -165,7 +165,7 @@ impl ToTokens for Machine {
                     type Machine = Machine<S, NoneEvent>;
 
                     fn new(state: S) -> Self::Machine {
-                        Machine(state, None)
+                        Machine(state, Option::None)
                     }
                 }
 
@@ -325,7 +325,7 @@ mod tests {
                     type Machine = Machine<S, NoneEvent>;
 
                     fn new(state: S) -> Self::Machine {
-                        Machine(state, None)
+                        Machine(state, Option::None)
                     }
                 }
 
@@ -611,7 +611,7 @@ mod tests {
                     type Machine = Machine<S, NoneEvent>;
 
                     fn new(state: S) -> Self::Machine {
-                        Machine(state, None)
+                        Machine(state, Option::None)
                     }
                 }
 
@@ -745,7 +745,7 @@ mod tests {
                     type Machine = Machine<S, NoneEvent>;
 
                     fn new(state: S) -> Self::Machine {
-                        Machine(state, None)
+                        Machine(state, Option::None)
                     }
                 }
 
