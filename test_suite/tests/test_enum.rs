@@ -32,19 +32,35 @@ impl<S: State, E: Event> Machine for TurnStile<S, E> {
     }
 }
 
-impl<E: Event> AsEnum for TurnStile<Unlocked, E> {
-    type Enum = States<E>;
+impl AsEnum for TurnStile<Unlocked, NoneEvent> {
+    type Enum = Variant;
 
     fn as_enum(self) -> Self::Enum {
-        States::Unlocked(self)
+        Variant::InitialUnlocked(self)
     }
 }
 
-impl<E: Event> AsEnum for TurnStile<Locked, E> {
-    type Enum = States<E>;
+impl AsEnum for TurnStile<Locked, NoneEvent> {
+    type Enum = Variant;
 
     fn as_enum(self) -> Self::Enum {
-        States::Locked(self)
+        Variant::InitialLocked(self)
+    }
+}
+
+impl AsEnum for TurnStile<Unlocked, Coin> {
+    type Enum = Variant;
+
+    fn as_enum(self) -> Self::Enum {
+        Variant::UnlockedByCoin(self)
+    }
+}
+
+impl AsEnum for TurnStile<Locked, Push> {
+    type Enum = Variant;
+
+    fn as_enum(self) -> Self::Enum {
+        Variant::LockedByPush(self)
     }
 }
 
@@ -61,22 +77,58 @@ impl PartialEq<Unlocked> for Locked {
 }
 
 #[derive(Debug)]
-pub enum States<E: Event> {
-    Locked(TurnStile<Locked, E>),
-    Unlocked(TurnStile<Unlocked, E>),
+pub enum Variant {
+    InitialUnlocked(TurnStile<Unlocked, NoneEvent>),
+    InitialLocked(TurnStile<Locked, NoneEvent>),
+    UnlockedByCoin(TurnStile<Unlocked, Coin>),
+    LockedByPush(TurnStile<Locked, Push>),
 }
 
 #[test]
 fn test_enum() {
+    use Variant::*;
+
     let sm: TurnStile<Locked, NoneEvent> = TurnStile(Locked, None);
     match sm.as_enum() {
-        States::Locked(m) => assert_eq!(m.state(), Locked),
-        States::Unlocked(_) => unreachable!(),
+        InitialLocked(m) => {
+            assert_eq!(m.state(), Locked);
+            assert!(m.trigger().is_none());
+        }
+        InitialUnlocked(_) => unreachable!(),
+        UnlockedByCoin(_) => unreachable!(),
+        LockedByPush(_) => unreachable!(),
     }
 
     let sm: TurnStile<Unlocked, NoneEvent> = TurnStile(Unlocked, None);
     match sm.as_enum() {
-        States::Locked(_) => unreachable!(),
-        States::Unlocked(m) => assert_eq!(m.state(), Unlocked),
+        InitialLocked(_) => unreachable!(),
+        InitialUnlocked(m) => {
+            assert_eq!(m.state(), Unlocked);
+            assert!(m.trigger().is_none());
+        }
+        UnlockedByCoin(_) => unreachable!(),
+        LockedByPush(_) => unreachable!(),
+    }
+
+    let sm: TurnStile<Unlocked, Coin> = TurnStile(Unlocked, Some(Coin));
+    match sm.as_enum() {
+        InitialLocked(_) => unreachable!(),
+        InitialUnlocked(_) => unreachable!(),
+        UnlockedByCoin(m) => {
+            assert_eq!(m.state(), Unlocked);
+            assert_eq!(m.trigger().unwrap(), Coin);
+        }
+        LockedByPush(_) => unreachable!(),
+    }
+
+    let sm: TurnStile<Locked, Push> = TurnStile(Locked, Some(Push));
+    match sm.as_enum() {
+        InitialLocked(_) => unreachable!(),
+        InitialUnlocked(_) => unreachable!(),
+        UnlockedByCoin(_) => unreachable!(),
+        LockedByPush(m) => {
+            assert_eq!(m.state(), Locked);
+            assert_eq!(m.trigger().unwrap(), Push);
+        }
     }
 }

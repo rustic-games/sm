@@ -7,11 +7,10 @@ use sm::sm;
 
 sm!{
     GameLoop {
-        InitialStates { Idle, Simulating, Rendering }
+        InitialStates { Idle }
 
         None {
-            Simulating => Idle
-            Rendering => Idle
+            Simulating, Rendering => Idle
         }
 
         Simulate {
@@ -24,6 +23,7 @@ sm!{
     }
 }
 
+use self::GameLoop::Variant::*;
 use self::GameLoop::*;
 
 fn criterion_benchmark(c: &mut Criterion) {
@@ -43,6 +43,89 @@ fn criterion_benchmark(c: &mut Criterion) {
 
             let sm = sm.transition(None);
             assert_eq!(sm.state(), Idle);
+        })
+    });
+
+    c.bench_function("match - Idle . Simulating . Idle . Rendering . Idle", |b| {
+        b.iter(|| {
+            let mut sm = Machine::new(Idle).as_enum();
+
+            {
+                sm = match sm {
+                    InitialIdle(m) => {
+                        let m = m.transition(Simulate);
+                        assert_eq!(m.state(), Simulating);
+                        m.as_enum()
+                    }
+                    SimulatingBySimulate(_) => unreachable!(),
+                    IdleByNone(_) => unreachable!(),
+                    RenderingByRender(_) => unreachable!(),
+                };
+
+                sm = match sm {
+                    InitialIdle(_) => unreachable!(),
+                    SimulatingBySimulate(m) => {
+                        let m = m.transition(None);
+                        assert_eq!(m.state(), Idle);
+                        m.as_enum()
+                    }
+                    IdleByNone(_) => unreachable!(),
+                    RenderingByRender(_) => unreachable!(),
+                };
+
+                sm = match sm {
+                    InitialIdle(_) => unreachable!(),
+                    SimulatingBySimulate(_) => unreachable!(),
+                    IdleByNone(m) => {
+                        let m = m.transition(Render);
+                        assert_eq!(m.state(), Rendering);
+                        m.as_enum()
+                    }
+                    RenderingByRender(_) => unreachable!(),
+                };
+
+                let _ = match sm {
+                    InitialIdle(_) => unreachable!(),
+                    SimulatingBySimulate(_) => unreachable!(),
+                    IdleByNone(_) => unreachable!(),
+                    RenderingByRender(m) => {
+                        let m = m.transition(None);
+                        assert_eq!(m.state(), Idle);
+                        m.as_enum()
+                    }
+                };
+            };
+        })
+    });
+
+    c.bench_function("loop - Idle . Simulating . Idle . Rendering . Idle", |b| {
+        b.iter(|| {
+            let mut sm = Machine::new(Idle).as_enum();
+
+            loop {
+                sm = match sm {
+                    InitialIdle(m) => {
+                        let m = m.transition(Simulate);
+                        assert_eq!(m.state(), Simulating);
+                        m.as_enum()
+                    }
+                    SimulatingBySimulate(m) => {
+                        let m = m.transition(None);
+                        assert_eq!(m.state(), Idle);
+                        m.as_enum()
+                    }
+                    IdleByNone(m) => {
+                        let m = m.transition(Render);
+                        assert_eq!(m.state(), Rendering);
+                        m.as_enum()
+                    }
+                    RenderingByRender(m) => {
+                        let m = m.transition(None);
+                        assert_eq!(m.state(), Idle);
+                        break;
+                    }
+                }
+            }
         })
     });
 }

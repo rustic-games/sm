@@ -399,24 +399,33 @@ mod tests {
                 }
 
                 #[derive(Debug)]
-                pub enum States<E: Event> {
-                    Unlocked(Machine<Unlocked, E>),
-                    Locked(Machine<Locked, E>)
+                pub enum Variant {
+                    InitialUnlocked(Machine<Unlocked, NoneEvent>),
+                    InitialLocked(Machine<Locked, NoneEvent>),
+                    LockedByPush(Machine<Locked, Push>)
                 }
 
-                impl<E: Event> AsEnum for Machine<Unlocked, E> {
-                    type Enum = States<E>;
+                impl AsEnum for Machine<Unlocked, NoneEvent> {
+                    type Enum = Variant;
 
                     fn as_enum(self) -> Self::Enum {
-                        States::Unlocked(self)
+                        Variant::InitialUnlocked(self)
                     }
                 }
 
-                impl<E: Event> AsEnum for Machine<Locked, E> {
-                    type Enum = States<E>;
+                impl AsEnum for Machine<Locked, NoneEvent> {
+                    type Enum = Variant;
 
                     fn as_enum(self) -> Self::Enum {
-                        States::Locked(self)
+                        Variant::InitialLocked(self)
+                    }
+                }
+
+                impl AsEnum for Machine<Locked, Push> {
+                    type Enum = Variant;
+
+                    fn as_enum(self) -> Self::Enum {
+                        Variant::LockedByPush(self)
                     }
                 }
 
@@ -707,24 +716,42 @@ mod tests {
                 }
 
                 #[derive(Debug)]
-                pub enum States<E: Event> {
-                    Locked(Machine<Locked, E>),
-                    Unlocked(Machine<Unlocked, E>)
+                pub enum Variant {
+                    InitialLocked(Machine<Locked, NoneEvent>),
+                    InitialUnlocked(Machine<Unlocked, NoneEvent>),
+                    UnlockedByCoin(Machine<Unlocked, Coin>),
+                    LockedByPush(Machine<Locked, Push>)
                 }
 
-                impl<E: Event> AsEnum for Machine<Locked, E> {
-                    type Enum = States<E>;
+                impl AsEnum for Machine<Locked, NoneEvent> {
+                    type Enum = Variant;
 
                     fn as_enum(self) -> Self::Enum {
-                        States::Locked(self)
+                        Variant::InitialLocked(self)
                     }
                 }
 
-                impl<E: Event> AsEnum for Machine<Unlocked, E> {
-                    type Enum = States<E>;
+                impl AsEnum for Machine<Unlocked, NoneEvent> {
+                    type Enum = Variant;
 
                     fn as_enum(self) -> Self::Enum {
-                        States::Unlocked(self)
+                        Variant::InitialUnlocked(self)
+                    }
+                }
+
+                impl AsEnum for Machine<Unlocked, Coin> {
+                    type Enum = Variant;
+
+                    fn as_enum(self) -> Self::Enum {
+                        Variant::UnlockedByCoin(self)
+                    }
+                }
+
+                impl AsEnum for Machine<Locked, Push> {
+                    type Enum = Variant;
+
+                    fn as_enum(self) -> Self::Enum {
+                        Variant::LockedByPush(self)
                     }
                 }
 
@@ -819,27 +846,44 @@ mod tests {
                 }
 
                 #[derive(Debug)]
-                pub enum States<E: Event> {
-                    Locked(Machine<Locked, E>),
-                    Unlocked(Machine<Unlocked, E>)
+                pub enum Variant {
+                    InitialLocked(Machine<Locked, NoneEvent>),
+                    InitialUnlocked(Machine<Unlocked, NoneEvent>),
+                    UnlockedByTurnKey(Machine<Unlocked, TurnKey>),
+                    LockedByTurnKey(Machine<Locked, TurnKey>)
                 }
 
-                impl<E: Event> AsEnum for Machine<Locked, E> {
-                    type Enum = States<E>;
+                impl AsEnum for Machine<Locked, NoneEvent> {
+                    type Enum = Variant;
 
                     fn as_enum(self) -> Self::Enum {
-                        States::Locked(self)
+                        Variant::InitialLocked(self)
                     }
                 }
 
-                impl<E: Event> AsEnum for Machine<Unlocked, E> {
-                    type Enum = States<E>;
+                impl AsEnum for Machine<Unlocked, NoneEvent> {
+                    type Enum = Variant;
 
                     fn as_enum(self) -> Self::Enum {
-                        States::Unlocked(self)
+                        Variant::InitialUnlocked(self)
                     }
                 }
 
+                impl AsEnum for Machine<Unlocked, TurnKey> {
+                    type Enum = Variant;
+
+                    fn as_enum(self) -> Self::Enum {
+                        Variant::UnlockedByTurnKey(self)
+                    }
+                }
+
+                impl AsEnum for Machine<Locked, TurnKey> {
+                    type Enum = Variant;
+
+                    fn as_enum(self) -> Self::Enum {
+                        Variant::LockedByTurnKey(self)
+                    }
+                }
                 impl<E: Event> Transition<TurnKey> for Machine<Locked, E> {
                     type Machine = Machine<Unlocked, TurnKey>;
 
