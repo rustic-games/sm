@@ -81,16 +81,12 @@ jobs:
       #     command: cargo kcov
 
       - run:
-          name: Run all lints
+          name: Run lints
           command: cargo clippy
 
       - run:
-          name: Run all tests
+          name: Run unit tests
           command: cargo test --all
-
-      - run:
-          name: Run all benchmarks
-          command: cargo bench --all
 
       - run:
           name: Run integration tests
@@ -101,6 +97,10 @@ jobs:
             cargo build
             cd ..
             cargo test --features unstable
+
+      - run:
+          name: Run benchmarks
+          command: cargo bench --all
 
       - save_cache:
           key: source-v1-{{ .Branch }}-{{ .Revision }}
