@@ -12,7 +12,7 @@ jobs:
           # nightly pinned at 2018-09-14, because of missing clippy on latest
           # see: https://mexus.github.io/rustup-components-history/
           name: Switch to nightly rust
-          command: rustup default nightly-2018-09-14-x86_64-unknown-linux-gnu
+          command: rustup default nightly-2018-10-02
 
       - run:
           name: Install tooling

@@ -16,11 +16,11 @@ environment:
   #   - channel: beta
   #     target: i686-pc-windows-msvc
   # Nightly 64-bit MSVC
-    - channel: nightly
+    - channel: nightly-2018-10-02
       target: x86_64-pc-windows-msvc
       #cargoflags: --features "unstable"
   # Nightly 32-bit MSVC
-    - channel: nightly
+    - channel: nightly-2018-10-02
       target: i686-pc-windows-msvc
       #cargoflags: --features "unstable"
 
@@ -41,10 +41,10 @@ environment:
   # Nightly 64-bit GNU
     # nightly pinned at 2018-09-14, because of missing clippy on latest
     # see: https://mexus.github.io/rustup-components-history/
-    - channel: nightly-2018-09-14
+    - channel: nightly-2018-10-02
       target: x86_64-pc-windows-gnu
   # Nightly 32-bit GNU
-    - channel: nightly-2018-09-14
+    - channel: nightly-2018-10-02
       target: i686-pc-windows-gnu
 
 matrix:
