@@ -38,8 +38,7 @@ impl Parse for Machines {
 impl ToTokens for Machines {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         tokens.extend(quote! {
-            extern crate sm as _sm;
-            use _sm::{AsEnum, Initializer, Machine as M, Transition};
+            use sm::{AsEnum, Initializer, Machine as M, Transition};
         });
 
         for machine in &self.0 {
@@ -143,7 +142,7 @@ impl ToTokens for Machine {
         tokens.extend(quote! {
             #[allow(non_snake_case)]
             mod #name {
-                use _sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
+                use sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
 
                 #[derive(Debug, Eq, PartialEq)]
                 pub struct Machine<S: State, E: Event>(S, Option<E>);
@@ -327,7 +326,7 @@ mod tests {
         let left = quote! {
             #[allow(non_snake_case)]
             mod TurnStile {
-                use _sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
+                use sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
 
                 #[derive(Debug, Eq, PartialEq)]
                 pub struct Machine<S: State, E: Event>(S, Option<E>);
@@ -617,12 +616,11 @@ mod tests {
         ]);
 
         let left = quote! {
-            extern crate sm as _sm;
-            use _sm::{AsEnum, Initializer, Machine as M, Transition};
+            use sm::{AsEnum, Initializer, Machine as M, Transition};
 
             #[allow(non_snake_case)]
             mod TurnStile {
-                use _sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
+                use sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
 
                 #[derive(Debug, Eq, PartialEq)]
                 pub struct Machine<S: State, E: Event>(S, Option<E>);
@@ -774,7 +772,7 @@ mod tests {
 
             #[allow(non_snake_case)]
             mod Lock {
-                use _sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
+                use sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
 
                 #[derive(Debug, Eq, PartialEq)]
                 pub struct Machine<S: State, E: Event>(S, Option<E>);
