@@ -10,7 +10,7 @@ sm!{
     }
 }
 
-use TurnStile::*;
+use crate::TurnStile::*;
 
 fn main() {
     // non-enum usage

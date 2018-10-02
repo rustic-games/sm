@@ -4,10 +4,10 @@ use quote::{quote, ToTokens};
 use syn::parse::{Parse, ParseStream, Result};
 use syn::{braced, parse_quote, Ident};
 
-use sm::event::{Event, Events};
-use sm::initial_state::InitialStates;
-use sm::state::{State, States};
-use sm::transition::Transitions;
+use crate::sm::event::{Event, Events};
+use crate::sm::initial_state::InitialStates;
+use crate::sm::state::{State, States};
+use crate::sm::transition::Transitions;
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct Machines(Vec<Machine>);
@@ -242,9 +242,9 @@ impl<'a> ToTokens for MachineEnum<'a> {
 mod tests {
     use super::*;
     use alloc::{format, vec};
+    use crate::sm::initial_state::InitialState;
+    use crate::sm::transition::Transition;
     use proc_macro2::TokenStream;
-    use sm::initial_state::InitialState;
-    use sm::transition::Transition;
     use syn;
     use syn::parse_quote;
 

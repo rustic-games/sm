@@ -86,7 +86,7 @@ pub enum Variant {
 
 #[test]
 fn test_enum() {
-    use Variant::*;
+    use crate::Variant::*;
 
     let sm: TurnStile<Locked, NoneEvent> = TurnStile(Locked, None);
     match sm.as_enum() {

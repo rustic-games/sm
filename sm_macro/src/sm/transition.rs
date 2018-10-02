@@ -5,8 +5,8 @@ use syn::parse::{Parse, ParseStream, Result};
 use syn::token::Comma;
 use syn::{braced, Token};
 
-use sm::event::Event;
-use sm::state::State;
+use crate::sm::event::Event;
+use crate::sm::state::State;
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct Transitions(pub Vec<Transition>);

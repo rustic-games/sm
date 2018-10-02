@@ -41,9 +41,9 @@ extern crate proc_macro2;
 extern crate quote;
 extern crate syn;
 
+use crate::sm::machine::Machines;
 use proc_macro::TokenStream;
 use quote::quote;
-use sm::machine::Machines;
 use syn::parse_macro_input;
 
 mod sm;
