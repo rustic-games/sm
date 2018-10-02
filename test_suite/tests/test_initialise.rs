@@ -13,8 +13,8 @@ impl InitialState for Locked {}
 #[derive(Debug, Eq, PartialEq)]
 pub struct TurnStile<S: State, E: Event>(S, Option<E>);
 impl<S: State, E: Event> Machine for TurnStile<S, E> {
-    type State = S;
     type Event = E;
+    type State = S;
 
     fn state(&self) -> Self::State {
         self.0.clone()
