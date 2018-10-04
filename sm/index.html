@@ -1,0 +1,297 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `sm` crate."><meta name="keywords" content="rust, rustlang, rust-lang, sm"><title>sm - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Crate sm</p><a id='all-types' href='all.html'><p>See all sm's items</p></a><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'sm', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/sm/lib.rs.html#1-649' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>sm</a></span></h1><div class='docblock'><p>Using this library, you declaratively define your state machines as as set
+of <em>states</em>, connected via <em>transitions</em>, triggered by <em>events</em>. You can
+query the current state of the machine, or pattern match against all
+possible machine variants.</p>
+<p>The implementation ensures a zero-sized abstraction that uses Rust's
+type-system and ownership model to guarantee valid transitions between
+states using events, and makes sure previous states are no longer accessible
+after transitioning away to another state. Rust validates correct usage of
+the state machine at compile-time, no runtime checking occurs when using the
+library.</p>
+<p>The library exposes the <code>sm!</code> macro, which allows you to declaratively build
+the state machine.</p>
+<h2 id="examples" class="section-header"><a href="#examples">Examples</a></h2><h3 id="quick-example" class="section-header"><a href="#quick-example">Quick Example</a></h3>
+<pre class="rust rust-example-rendered">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">sm</span>;
+<span class="kw">use</span> <span class="ident">sm</span>::<span class="ident">sm</span>;
+
+<span class="macro">sm</span><span class="macro">!</span> {
+    <span class="ident">Lock</span> {
+        <span class="ident">InitialStates</span> { <span class="ident">Locked</span>, <span class="ident">Unlocked</span> }
+
+        <span class="ident">TurnKey</span> {
+            <span class="ident">Locked</span> <span class="op">=&gt;</span> <span class="ident">Unlocked</span>
+            <span class="ident">Unlocked</span> <span class="op">=&gt;</span> <span class="ident">Locked</span>
+        }
+
+        <span class="ident">Break</span> {
+            <span class="ident">Locked</span>, <span class="ident">Unlocked</span> <span class="op">=&gt;</span> <span class="ident">Broken</span>
+        }
+    }
+}
+
+<span class="kw">fn</span> <span class="ident">main</span>() {
+    <span class="kw">use</span> <span class="ident">Lock</span>::<span class="kw-2">*</span>;
+    <span class="kw">let</span> <span class="ident">lock</span> <span class="op">=</span> <span class="ident">Machine</span>::<span class="ident">new</span>(<span class="ident">Locked</span>);
+    <span class="kw">let</span> <span class="ident">lock</span> <span class="op">=</span> <span class="ident">lock</span>.<span class="ident">transition</span>(<span class="ident">TurnKey</span>);
+
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">lock</span>.<span class="ident">state</span>(), <span class="ident">Unlocked</span>);
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">lock</span>.<span class="ident">trigger</span>().<span class="ident">unwrap</span>(), <span class="ident">TurnKey</span>);
+}</pre>
+<h3 id="descriptive-example" class="section-header"><a href="#descriptive-example">Descriptive Example</a></h3>
+<p>The below example explains step-by-step how to create a new state machine
+using the provided macro, and then how to use the created machine in your
+code by querying states, and transitioning between states by triggering
+events.</p>
+<h4 id="declaring-a-new-state-machine" class="section-header"><a href="#declaring-a-new-state-machine">Declaring a new State Machine</a></h4>
+<p>First, we import the macro from the crate:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">sm</span>;
+<span class="kw">use</span> <span class="ident">sm</span>::<span class="ident">sm</span>;</pre>
+<p>Next, we initiate the macro declaration:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="macro">sm</span><span class="macro">!</span> {</pre>
+<p>Then, provide a name for the machine, and declare a list of allowed initial
+states:</p>
+
+<pre class="rust rust-example-rendered">
+    <span class="ident">Lock</span> {
+        <span class="ident">InitialStates</span> { <span class="ident">Locked</span>, <span class="ident">Unlocked</span> }</pre>
+<p>Finally, we declare one or more events and the associated transitions:</p>
+
+<pre class="rust rust-example-rendered">
+        <span class="ident">TurnKey</span> {
+            <span class="ident">Locked</span> <span class="op">=&gt;</span> <span class="ident">Unlocked</span>
+            <span class="ident">Unlocked</span> <span class="op">=&gt;</span> <span class="ident">Locked</span>
+        }
+
+        <span class="ident">Break</span> {
+            <span class="ident">Locked</span>, <span class="ident">Unlocked</span> <span class="op">=&gt;</span> <span class="ident">Broken</span>
+        }
+    }
+}</pre>
+<p>And we're done. We've defined our state machine structure, and the valid
+transitions, and can now use this state machine in our code.</p>
+<h4 id="using-your-state-machine" class="section-header"><a href="#using-your-state-machine">Using your State Machine</a></h4>
+<p>You can initialise the machine as follows:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">let</span> <span class="ident">sm</span> <span class="op">=</span> <span class="ident">Lock</span>::<span class="ident">Machine</span>::<span class="ident">new</span>(<span class="ident">Lock</span>::<span class="ident">Locked</span>);</pre>
+<p>We can make this a bit less verbose by bringing our machine into scope:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">Lock</span>::<span class="kw-2">*</span>;
+<span class="kw">let</span> <span class="ident">sm</span> <span class="op">=</span> <span class="ident">Machine</span>::<span class="ident">new</span>(<span class="ident">Locked</span>);</pre>
+<p>We've initialised our machine in the <code>Locked</code> state. You can get the current
+state of the machine by sending the <code>state()</code> method to the machine:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">sm</span>.<span class="ident">state</span>();
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">state</span>, <span class="ident">Locked</span>);</pre>
+<p>While you <em>can</em> use <code>sm.state()</code> with conditional branching to execute your
+code based on the current state, this can be a bit tedious, it's less
+idiomatic, and it prevents you from using one extra compile-time validation
+tool in our toolbox: using Rust's exhaustive pattern matching requirement to
+ensure you've covered all possible state variants in your business logic.</p>
+<p>While <code>sm.state()</code> returns the state as a unit-like struct (which itself is
+a <a href="https://doc.rust-lang.org/nomicon/exotic-sizes.html#zero-sized-types-zsts">ZST</a>, or Zero Sized Type), you can use the <code>sm.as_enum()</code> method to get
+the state machine back as an enum variant.</p>
+<p>Using the enum variant and pattern matching, you are able to do the
+following:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">use</span> <span class="ident">Lock</span>::<span class="ident">Variant</span>::<span class="kw-2">*</span>;
+
+<span class="kw">match</span> <span class="ident">sm</span>.<span class="ident">as_enum</span>() {
+    <span class="ident">InitialLocked</span>(<span class="ident">m</span>) <span class="op">=&gt;</span> {
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">state</span>(), <span class="ident">Locked</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">trigger</span>().<span class="ident">is_none</span>());
+    }
+    <span class="ident">InitialUnlocked</span>(<span class="ident">m</span>) <span class="op">=&gt;</span> {
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">state</span>(), <span class="ident">Unlocked</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">trigger</span>().<span class="ident">is_none</span>());
+    }
+    <span class="ident">LockedByTurnKey</span>(<span class="ident">m</span>) <span class="op">=&gt;</span> {
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">state</span>(), <span class="ident">Locked</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">trigger</span>().<span class="ident">unwrap</span>(), <span class="ident">TurnKey</span>);
+    }
+    <span class="ident">UnlockedByTurnKey</span>(<span class="ident">m</span>) <span class="op">=&gt;</span> {
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">state</span>(), <span class="ident">Unlocked</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">trigger</span>().<span class="ident">unwrap</span>(), <span class="ident">TurnKey</span>);
+    }
+    <span class="ident">BrokenByBreak</span>(<span class="ident">m</span>) <span class="op">=&gt;</span> {
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">state</span>(), <span class="ident">Broken</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">m</span>.<span class="ident">trigger</span>().<span class="ident">unwrap</span>(), <span class="ident">Break</span>);
+    }
+}</pre>
+<p>Each state configured with <code>InitialStates</code> has its own variant named
+<code>Initial&lt;State&gt;</code>. Next to those, each valid state + event combination also
+has its own variant, named <code>&lt;state&gt;By&lt;event&gt;</code>.</p>
+<p>The compiler won't be satisfied until you've either exhausted all possible
+enum variants, or you explicitly opt-out of matching all variants, either
+way, you can be much more confident that your code won't break if you add a
+new state down the road, but forget to add it to a pattern match somewhere
+deep inside your code-base.</p>
+<p>To transition this machine to the <code>Unlocked</code> state, we send the <code>transition</code>
+method, using the <code>TurnKey</code> event:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="kw">let</span> <span class="ident">sm</span> <span class="op">=</span> <span class="ident">sm</span>.<span class="ident">transition</span>(<span class="ident">TurnKey</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sm</span>.<span class="ident">state</span>(), <span class="ident">Unlocked</span>);</pre>
+<p>Because multiple events can lead to a single state, it's also important to
+be able to determine what event caused the machine to transition to the
+current state. We can ask this information using the <code>trigger()</code> method:</p>
+
+<pre class="rust rust-example-rendered">
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sm</span>.<span class="ident">trigger</span>().<span class="ident">unwrap</span>(), <span class="ident">TurnKey</span>);</pre>
+<p>The <code>trigger()</code> method returns <code>None</code> if no state transition has taken place
+yet (ie. the machine is still in its initial state), and <code>Some(Event)</code> if
+one or more transitions have taken place.</p>
+<h4 id="a-word-about-type-safety-and-ownership" class="section-header"><a href="#a-word-about-type-safety-and-ownership">A word about Type-Safety and Ownership</a></h4>
+<p>It's important to realise that we've <em>consumed</em> the original machine in the
+above example when we transitioned the machine to a different state, and got
+a newly initialised machine back in the <code>Unlocked</code> state.</p>
+<p>This allows us to safely use the machine without having to worry about
+multiple readers using the machine in different states.</p>
+<p>All these checks are applied on compile-time, so the following example would
+fail to compile:</p>
+
+<div class='information'><div class='tooltip compile_fail'>ⓘ<span class='tooltiptext'>This example deliberately fails to compile</span></div></div><pre class="rust rust-example-rendered compile_fail">
+<span class="kw">let</span> <span class="ident">sm2</span> <span class="op">=</span> <span class="ident">sm</span>.<span class="ident">transition</span>(<span class="ident">TurnKey</span>);
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sm</span>.<span class="ident">state</span>(), <span class="ident">Locked</span>);</pre>
+<p>This fails with the following compilation error:</p>
+<pre><code class="language-text">error[E0382]: use of moved value: `sm`
+  --&gt; src/lib.rs:315:12
+   |
+22 | let sm2 = sm.transition(TurnKey);
+   |           -- value moved here
+23 | assert_eq!(sm.state(), Locked);
+   |            ^^ value used here after move
+   |
+   = note: move occurs because `sm` has type `Lock::Machine&lt;Lock::Locked&gt;`, which does not implement the `Copy` trait
+</code></pre>
+<p>Similarly, we cannot execute undefined transitions, these are also caught by
+the compiler:</p>
+
+<div class='information'><div class='tooltip compile_fail'>ⓘ<span class='tooltiptext'>This example deliberately fails to compile</span></div></div><pre class="rust rust-example-rendered compile_fail">
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sm</span>.<span class="ident">state</span>(), <span class="ident">Broken</span>);
+
+<span class="kw">let</span> <span class="ident">sm</span> <span class="op">=</span> <span class="ident">sm</span>.<span class="ident">transition</span>(<span class="ident">TurnKey</span>);</pre>
+<p>This fails with the following compilation error:</p>
+<pre><code class="language-text">error[E0599]: no method named `transition` found for type `Lock::Machine&lt;Lock::Broken&gt;` in the current scope
+  --&gt; src/lib.rs:360:13
+   |
+4  | sm! {
+   | --- method `transition` not found for this
+...
+25 | let sm = sm.transition(TurnKey);
+   |             ^^^^^^^^^^
+   |
+   = help: items from traits can only be used if the trait is implemented and in scope
+   = note: the following trait defines an item `transition`, perhaps you need to implement it:
+           candidate #1: `sm::Transition`
+</code></pre>
+<p>The error message is not great (and can potentially be improved in the
+future), but any error telling you <code>transition</code> is not implemented, or the
+passed in event type is invalid is an indication that you are trying to
+execute an illegal state transition.</p>
+<p>Finally, we are confined to initialising a new machine in only the states
+that we defined in <code>InitialStates</code>:</p>
+
+<div class='information'><div class='tooltip compile_fail'>ⓘ<span class='tooltiptext'>This example deliberately fails to compile</span></div></div><pre class="rust rust-example-rendered compile_fail">
+<span class="kw">let</span> <span class="ident">sm</span> <span class="op">=</span> <span class="ident">Machine</span>::<span class="ident">new</span>(<span class="ident">Broken</span>);</pre>
+<p>This results in the following error:</p>
+<pre><code class="language-text">error[E0277]: the trait bound `Lock::Broken: sm::InitialState` is not satisfied
+  --&gt; src/lib.rs:417:10
+   |
+21 | let sm = Machine::new(Broken);
+   |          ^^^^^^^^^^^^ the trait `sm::InitialState` is not implemented for `Lock::Broken`
+   |
+   = note: required because of the requirements on the impl of `sm::NewMachine&lt;Lock::Broken&gt;` for `Lock::Machine&lt;Lock::Broken&gt;`
+</code></pre>
+<h4 id="the-end-" class="section-header"><a href="#the-end-">The End 👋</a></h4>
+<p>And that's it! There's nothing else to it, except a declarative – and easy
+to read – state machine construction macro, and a type-safe and
+ownership-focused way of dealing with states and transitions, without any
+runtime overhead.</p>
+<p><strong>Go forth and transition!</strong></p>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
+<table><tr><td><code>pub use sm_macro::sm;</code></td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.NoneEvent.html"
+                                  title='struct sm::NoneEvent'>NoneEvent</a></td>
+                           <td class='docblock-short'>
+                                <p>NoneEvent is a semi-private event struct that is used to allow the
+<code>Initializer</code> trait implementations to provide a simple API to initialise a
+new machine.</p>
+
+                           </td>
+                       </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.AsEnum.html"
+                                  title='trait sm::AsEnum'>AsEnum</a></td>
+                           <td class='docblock-short'>
+                                <p>AsEnum provides the method to convert a state machine instance to an enum
+type.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.Event.html"
+                                  title='trait sm::Event'>Event</a></td>
+                           <td class='docblock-short'>
+                                <p>Event is a custom <a href="https://doc.rust-lang.org/std/marker/index.html">marker trait</a> that allows <a href="https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields">unit-like structs</a> to be
+used as states in a state machine.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.InitialState.html"
+                                  title='trait sm::InitialState'>InitialState</a></td>
+                           <td class='docblock-short'>
+                                <p>InitialState is a custom <a href="https://doc.rust-lang.org/std/marker/index.html">marker trait</a> that allows a state to be used as
+the initial state in a state machine. This trait is a superset of the
+<code>State</code> trait.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.Initializer.html"
+                                  title='trait sm::Initializer'>Initializer</a></td>
+                           <td class='docblock-short'>
+                                <p>Initializer defines the <code>new</code> method on a machine, that accepts any state
+marked as <code>InitialState</code>, and returns a new machine.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.Machine.html"
+                                  title='trait sm::Machine'>Machine</a></td>
+                           <td class='docblock-short'>
+                                <p>Machine provides the method required to query a state machine for its
+current state.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.State.html"
+                                  title='trait sm::State'>State</a></td>
+                           <td class='docblock-short'>
+                                <p>State is a custom <a href="https://doc.rust-lang.org/std/marker/index.html">marker trait</a> that allows <a href="https://doc.rust-lang.org/book/second-edition/ch05-01-defining-structs.html#unit-like-structs-without-any-fields">unit-like structs</a> to be
+used as states in a state machine.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="trait" href="trait.Transition.html"
+                                  title='trait sm::Transition'>Transition</a></td>
+                           <td class='docblock-short'>
+                                <p>Transition provides the method required to transition from one state to
+another.</p>
+
+                           </td>
+                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "sm";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>
