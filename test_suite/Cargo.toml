@@ -2,6 +2,7 @@
 name = "sm_test_suite"
 version = "0.0.0"
 authors = ["Jean Mertz <helloworld@rustic.games>"]
+edition = "2018"
 publish = false
 
 [features]

@@ -9,6 +9,7 @@ keywords = ["fsm", "state", "state-machine"]
 categories = ["game-engines", "no-std", "simulation", "science", "visualization"]
 readme = "crates-io.md"
 exclude = ["examples"]
+edition = "2018"
 
 [dependencies]
 sm_macro = { version = "0.7", path = "../sm_macro", optional = true }
