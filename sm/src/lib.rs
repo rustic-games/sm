@@ -491,7 +491,6 @@
 //!
 //! **Go forth and transition!**
 
-#![no_std]
 #![forbid(
     future_incompatible,
     macro_use_extern_crate,
@@ -515,13 +514,10 @@
     unused_results,
     unused,
 )]
-#![feature(tool_lints)]
 #![deny(clippy::all)]
 
 use core::fmt;
 
-#[cfg(feature = "macro")]
-extern crate sm_macro;
 #[cfg(feature = "macro")]
 pub use sm_macro::sm;
 

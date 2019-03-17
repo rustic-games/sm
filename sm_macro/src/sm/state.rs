@@ -1,9 +1,9 @@
-use alloc::vec::{IntoIter, Vec};
 use proc_macro2::TokenStream;
 use quote::quote;
 use quote::ToTokens;
 use syn::parse::{Parse, ParseStream, Result};
 use syn::Ident;
+use std::vec::IntoIter;
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct States(pub Vec<State>);
@@ -74,7 +74,6 @@ impl ToTokens for State {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloc::{format, vec};
     use proc_macro2::TokenStream;
     use syn;
     use syn::parse_quote;

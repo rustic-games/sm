@@ -1,4 +1,3 @@
-use alloc::vec::Vec;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Parse, ParseStream, Result};
@@ -64,7 +63,6 @@ impl ToTokens for Event {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloc::{format, vec};
     use proc_macro2::TokenStream;
     use syn;
     use syn::parse_quote;

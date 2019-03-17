@@ -1,4 +1,3 @@
-use alloc::{format, vec::Vec};
 use proc_macro2::{Span, TokenStream};
 use quote::{quote, ToTokens};
 use syn::parse::{Parse, ParseStream, Result};
@@ -241,7 +240,6 @@ impl<'a> ToTokens for MachineEnum<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloc::{format, vec};
     use crate::sm::initial_state::InitialState;
     use crate::sm::transition::Transition;
     use proc_macro2::TokenStream;

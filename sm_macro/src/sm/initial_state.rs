@@ -1,4 +1,3 @@
-use alloc::vec::Vec;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::parse::{Parse, ParseStream, Result};
@@ -84,7 +83,6 @@ impl ToTokens for InitialState {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloc::{format, vec};
     use quote::quote;
     use syn::{parse2, parse_quote};
 

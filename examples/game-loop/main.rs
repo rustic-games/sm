@@ -1,8 +1,3 @@
-#![feature(duration_as_u128)]
-
-extern crate rand;
-extern crate sm;
-
 use rand::{distributions::{Distribution, Uniform},
            prelude::*};
 use sm::sm;
