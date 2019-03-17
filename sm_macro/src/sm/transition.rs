@@ -1,11 +1,13 @@
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::parse::{Parse, ParseStream, Result};
-use syn::token::Comma;
-use syn::{braced, Token};
+use syn::{
+    braced,
+    parse::{Parse, ParseStream, Result},
+    token::Comma,
+    Token,
+};
 
-use crate::sm::event::Event;
-use crate::sm::state::State;
+use crate::sm::{event::Event, state::State};
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct Transitions(pub Vec<Transition>);
@@ -17,7 +19,6 @@ impl Parse for Transitions {
     /// Push { ... }
     /// Coin { ... }
     /// ```
-    ///
     fn parse(input: ParseStream<'_>) -> Result<Self> {
         let mut transitions: Vec<Transition> = Vec::new();
         while !input.is_empty() {
@@ -106,8 +107,7 @@ impl ToTokens for Transition {
 mod tests {
     use super::*;
     use proc_macro2::TokenStream;
-    use syn;
-    use syn::parse_quote;
+    use syn::{self, parse_quote};
 
     #[test]
     fn test_transition_to_tokens() {
@@ -144,7 +144,8 @@ mod tests {
         let left: Transitions = syn::parse2(quote! {
             Push { Locked, Unlocked => Locked }
             Coin { Locked, Unlocked => Unlocked }
-        }).unwrap();
+        })
+        .unwrap();
 
         let right = Transitions(vec![
             Transition {

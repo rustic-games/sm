@@ -503,7 +503,7 @@
     trivial_casts,
     trivial_numeric_casts,
     unsafe_code,
-    variant_size_differences,
+    variant_size_differences
 )]
 #![warn(
     non_snake_case,
@@ -512,7 +512,7 @@
     unused_lifetimes,
     unused_qualifications,
     unused_results,
-    unused,
+    unused
 )]
 #![deny(clippy::all)]
 

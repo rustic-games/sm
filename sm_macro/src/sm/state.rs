@@ -1,9 +1,10 @@
 use proc_macro2::TokenStream;
-use quote::quote;
-use quote::ToTokens;
-use syn::parse::{Parse, ParseStream, Result};
-use syn::Ident;
+use quote::{quote, ToTokens};
 use std::vec::IntoIter;
+use syn::{
+    parse::{Parse, ParseStream, Result},
+    Ident,
+};
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct States(pub Vec<State>);
@@ -32,8 +33,8 @@ impl ToTokens for States {
 
 #[allow(single_use_lifetimes)] // TODO: how to fix this?
 impl<'a> IntoIterator for &'a States {
-    type Item = State;
     type IntoIter = IntoIter<State>;
+    type Item = State;
 
     fn into_iter(self) -> Self::IntoIter {
         self.0.clone().into_iter()
@@ -51,7 +52,6 @@ impl Parse for State {
     /// ```text
     /// Locked
     /// ```
-    ///
     fn parse(input: ParseStream<'_>) -> Result<Self> {
         let name = input.parse()?;
 
@@ -75,8 +75,7 @@ impl ToTokens for State {
 mod tests {
     use super::*;
     use proc_macro2::TokenStream;
-    use syn;
-    use syn::parse_quote;
+    use syn::{self, parse_quote};
 
     #[test]
     fn test_state_parse() {

@@ -1,7 +1,7 @@
 extern crate sm;
 use sm::sm;
 
-sm!{
+sm! {
     TurnStile {
         InitialStates { Locked }
 
@@ -33,14 +33,14 @@ fn main() {
                 coins += 1;
 
                 m.transition(Push).as_enum()
-            },
+            }
             Variant::LockedByPush(m) => {
                 if coins == 100 {
                     break;
                 }
 
                 m.transition(Coin).as_enum()
-            },
+            }
         }
     }
 

@@ -1,10 +1,14 @@
-use rand::{distributions::{Distribution, Uniform},
-           prelude::*};
+use rand::{
+    distributions::{Distribution, Uniform},
+    prelude::*,
+};
 use sm::sm;
-use std::{ops::Add,
-          time::{Duration, Instant}};
+use std::{
+    ops::Add,
+    time::{Duration, Instant},
+};
 
-sm!{
+sm! {
     // `GameTick` is the name of our state machine. The machine handles a single
     // game tick (or a single run of the game loop) from start to finish.
     GameTick {
@@ -57,8 +61,8 @@ type Nanoseconds = u64;
 #[allow(non_upper_case_globals)]
 const nanoseconds_per_second: u64 = 1_000_000_000;
 
-/// Config contains the variables that you could potentially expose to the player
-/// via a preferences menu.
+/// Config contains the variables that you could potentially expose to the
+/// player via a preferences menu.
 struct Config {
     /// `fixed_updates_per_second` sets the game state update to a fixed
     /// interval. This is what decouples your game update behaviour from the
@@ -145,8 +149,8 @@ fn main() {
     let update_interval: Nanoseconds = nanoseconds_per_second / config.fixed_updates_per_second;
 
     // // ...
-    // let _render_max_interval: Nanoseconds = if config.max_frames_per_second == 0 {
-    //     0
+    // let _render_max_interval: Nanoseconds = if config.max_frames_per_second == 0
+    // {     0
     // } else {
     //     nanoseconds_per_second / config.max_frames_per_second
     // };
@@ -181,11 +185,11 @@ fn main() {
     // the following is true:
     //
     // * we move 1X per update
-    // * we update the game state 100 times per second (so we need 10
-    //   milliseconds per update)
-    // * our `accumulated_time` has 5 milliseconds remaining (remember, we
-    //   _need_ 10 milliseconds to update the game, so the last 5 milliseconds
-    //   are kept around)
+    // * we update the game state 100 times per second (so we need 10 milliseconds
+    //   per update)
+    // * our `accumulated_time` has 5 milliseconds remaining (remember, we _need_ 10
+    //   milliseconds to update the game, so the last 5 milliseconds are kept
+    //   around)
     //
     // we now know that if we had 10 milliseconds remaining, the character
     // would've moved to X = 11. But since we only had 5 milliseconds left, the
@@ -265,7 +269,7 @@ fn main() {
                     last_step_timestamp = Instant::now();
 
                     m.transition(DrainAccumulatedTime).as_enum()
-                },
+                }
 
                 // Every time we end up in this match arm, we are asked to
                 // update the game state (for example, updating the physics).
@@ -292,7 +296,7 @@ fn main() {
                     } else {
                         m.transition(Render).as_enum()
                     }
-                },
+                }
 
                 // The rendering match arm is triggered _after_ the game has
                 // been updated. In this state, the current game state is
@@ -301,7 +305,7 @@ fn main() {
                     handle_render(&mut render_count, &mut tunables);
 
                     m.transition(CompletedRendering).as_enum()
-                },
+                }
 
                 // Finally, after the game state has been rendered, the
                 // execution of the current game tick is done. When this match

@@ -1,12 +1,17 @@
 use proc_macro2::{Span, TokenStream};
 use quote::{quote, ToTokens};
-use syn::parse::{Parse, ParseStream, Result};
-use syn::{braced, parse_quote, Ident};
+use syn::{
+    braced,
+    parse::{Parse, ParseStream, Result},
+    parse_quote, Ident,
+};
 
-use crate::sm::event::{Event, Events};
-use crate::sm::initial_state::InitialStates;
-use crate::sm::state::{State, States};
-use crate::sm::transition::Transitions;
+use crate::sm::{
+    event::{Event, Events},
+    initial_state::InitialStates,
+    state::{State, States},
+    transition::Transitions,
+};
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct Machines(Vec<Machine>);
@@ -19,7 +24,6 @@ impl Parse for Machines {
     /// Lock { ... }
     /// MyStateMachine { ... }
     /// ```
-    ///
     fn parse(input: ParseStream<'_>) -> Result<Self> {
         let mut machines: Vec<Machine> = Vec::new();
 
@@ -102,7 +106,6 @@ impl Parse for Machine {
     ///     Coin { ... }
     /// }
     /// ```
-    ///
     fn parse(input: ParseStream<'_>) -> Result<Self> {
         // `TurnStile { ... }`
         //  ^^^^^^^^^
@@ -218,7 +221,7 @@ impl<'a> ToTokens for MachineEnum<'a> {
         let states = &states;
         let events = &events;
 
-        tokens.extend(quote!{
+        tokens.extend(quote! {
             #[derive(Debug)]
             pub enum Variant {
                 #(#variants(Machine<#states, #events>)),*
@@ -240,11 +243,9 @@ impl<'a> ToTokens for MachineEnum<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::sm::initial_state::InitialState;
-    use crate::sm::transition::Transition;
+    use crate::sm::{initial_state::InitialState, transition::Transition};
     use proc_macro2::TokenStream;
-    use syn;
-    use syn::parse_quote;
+    use syn::{self, parse_quote};
 
     #[test]
     fn test_machine_parse() {
@@ -255,7 +256,8 @@ mod tests {
                Coin { Locked => Unlocked }
                Push { Unlocked => Locked }
            }
-        }).unwrap();
+        })
+        .unwrap();
 
         let right = Machine {
             name: parse_quote! { TurnStile },
@@ -460,7 +462,8 @@ mod tests {
                    Unlocked => Locked
                 }
            }
-        }).unwrap();
+        })
+        .unwrap();
 
         let right = Machines(vec![
             Machine {
