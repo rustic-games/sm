@@ -8,6 +8,7 @@ repository = "https://github.com/rusty-rockets/sm"
 keywords = ["fsm", "state", "state-machine"]
 categories = ["game-engines", "no-std", "simulation", "science", "visualization"]
 readme = "crates-io.md"
+edition = "2018"
 
 [dependencies]
 proc-macro2 = "0.4"

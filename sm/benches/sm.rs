@@ -5,7 +5,7 @@ extern crate sm;
 use criterion::Criterion;
 use sm::sm;
 
-sm!{
+sm! {
     GameLoop {
         InitialStates { Idle }
 

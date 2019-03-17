@@ -1,9 +1,11 @@
-use alloc::vec::Vec;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::parse::{Parse, ParseStream, Result};
-use syn::punctuated::Punctuated;
-use syn::{braced, Ident, Token};
+use syn::{
+    braced,
+    parse::{Parse, ParseStream, Result},
+    punctuated::Punctuated,
+    Ident, Token,
+};
 
 #[derive(Debug, PartialEq)]
 pub(crate) struct InitialStates(pub Vec<InitialState>);
@@ -14,7 +16,6 @@ impl Parse for InitialStates {
     /// ```text
     /// InitialStates { Locked, Unlocked }
     /// ```
-    ///
     fn parse(input: ParseStream<'_>) -> Result<Self> {
         let mut initial_states: Vec<InitialState> = Vec::new();
 
@@ -63,7 +64,6 @@ impl Parse for InitialState {
     /// ```text
     /// Locked
     /// ```
-    ///
     fn parse(input: ParseStream<'_>) -> Result<Self> {
         let name = input.parse()?;
 
@@ -84,7 +84,6 @@ impl ToTokens for InitialState {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloc::{format, vec};
     use quote::quote;
     use syn::{parse2, parse_quote};
 
@@ -118,7 +117,8 @@ mod tests {
     fn test_initial_states_parse() {
         let left: InitialStates = parse2(quote! {
             InitialStates { Locked, Unlocked }
-        }).unwrap();
+        })
+        .unwrap();
 
         let right = InitialStates(vec![
             InitialState {

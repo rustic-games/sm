@@ -1,5 +1,3 @@
-#![cfg(feature = "unstable")]
-
 extern crate compiletest_rs as compiletest;
 
 use std::env;

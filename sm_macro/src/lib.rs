@@ -4,11 +4,8 @@
 //!
 //! [sm]: https://docs.rs/sm
 
-#![no_std]
 // quote! macro needs a higher recursion limit
 #![recursion_limit = "512"]
-#![feature(alloc)]
-#![feature(proc_macro_diagnostic)]
 #![forbid(
     future_incompatible,
     macro_use_extern_crate,
@@ -19,7 +16,7 @@
     trivial_casts,
     trivial_numeric_casts,
     unsafe_code,
-    variant_size_differences,
+    variant_size_differences
 )]
 #![warn(
     missing_docs,
@@ -30,16 +27,11 @@
     unused_lifetimes,
     unused_qualifications,
     unused_results,
-    unused,
+    unused
 )]
-#![feature(tool_lints)]
 #![deny(clippy::all)]
 
-extern crate alloc;
 extern crate proc_macro;
-extern crate proc_macro2;
-extern crate quote;
-extern crate syn;
 
 use crate::sm::machine::Machines;
 use proc_macro::TokenStream;

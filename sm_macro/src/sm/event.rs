@@ -1,8 +1,9 @@
-use alloc::vec::Vec;
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
-use syn::parse::{Parse, ParseStream, Result};
-use syn::Ident;
+use syn::{
+    parse::{Parse, ParseStream, Result},
+    Ident,
+};
 
 #[allow(unused)]
 #[derive(Debug)]
@@ -41,7 +42,6 @@ impl Parse for Event {
     /// ```text
     /// Push
     /// ```
-    ///
     fn parse(input: ParseStream<'_>) -> Result<Self> {
         let name = input.parse()?;
 
@@ -64,10 +64,8 @@ impl ToTokens for Event {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloc::{format, vec};
     use proc_macro2::TokenStream;
-    use syn;
-    use syn::parse_quote;
+    use syn::{self, parse_quote};
 
     #[test]
     fn test_event_parse() {
