@@ -146,7 +146,7 @@ impl ToTokens for Machine {
             mod #name {
                 use sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
 
-                #[derive(Debug, Eq, PartialEq)]
+                #[derive(Debug, Eq, PartialEq, Clone)]
                 pub struct Machine<S: State, E: Event>(S, Option<E>);
 
                 impl<S: State, E: Event> M for Machine<S, E> {
@@ -222,7 +222,7 @@ impl<'a> ToTokens for MachineEnum<'a> {
         let events = &events;
 
         tokens.extend(quote! {
-            #[derive(Debug)]
+            #[derive(Debug, Clone)]
             pub enum Variant {
                 #(#variants(Machine<#states, #events>)),*
             }
@@ -328,7 +328,7 @@ mod tests {
             mod TurnStile {
                 use sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
 
-                #[derive(Debug, Eq, PartialEq)]
+                #[derive(Debug, Eq, PartialEq, Clone)]
                 pub struct Machine<S: State, E: Event>(S, Option<E>);
 
                 impl<S: State, E: Event> M for Machine<S, E> {
@@ -397,7 +397,7 @@ mod tests {
                     }
                 }
 
-                #[derive(Debug)]
+                #[derive(Debug, Clone)]
                 pub enum Variant {
                     InitialUnlocked(Machine<Unlocked, NoneEvent>),
                     InitialLocked(Machine<Locked, NoneEvent>),
@@ -623,7 +623,7 @@ mod tests {
             mod TurnStile {
                 use sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
 
-                #[derive(Debug, Eq, PartialEq)]
+                #[derive(Debug, Eq, PartialEq, Clone)]
                 pub struct Machine<S: State, E: Event>(S, Option<E>);
 
                 impl<S: State, E: Event> M for Machine<S, E> {
@@ -714,7 +714,7 @@ mod tests {
                     }
                 }
 
-                #[derive(Debug)]
+                #[derive(Debug, Clone)]
                 pub enum Variant {
                     InitialLocked(Machine<Locked, NoneEvent>),
                     InitialUnlocked(Machine<Unlocked, NoneEvent>),
@@ -775,7 +775,7 @@ mod tests {
             mod Lock {
                 use sm::{AsEnum, Event, InitialState, Initializer, Machine as M, NoneEvent, State, Transition};
 
-                #[derive(Debug, Eq, PartialEq)]
+                #[derive(Debug, Eq, PartialEq, Clone)]
                 pub struct Machine<S: State, E: Event>(S, Option<E>);
 
                 impl<S: State, E: Event> M for Machine<S, E> {
@@ -844,7 +844,7 @@ mod tests {
                     }
                 }
 
-                #[derive(Debug)]
+                #[derive(Debug, Clone)]
                 pub enum Variant {
                     InitialLocked(Machine<Locked, NoneEvent>),
                     InitialUnlocked(Machine<Unlocked, NoneEvent>),
