@@ -18,9 +18,9 @@ You might be looking for:
 - [Examples][examples]
 - [API documentation][api]
 
-[book]: https://github.com/rusty-rockets/sm/blob/master/README.md#descriptive-example
-[repo]: https://github.com/rusty-rockets/sm
-[examples]: https://github.com/rusty-rockets/sm/tree/master/examples
+[book]: https://github.com/rustic-games/sm/blob/master/README.md#descriptive-example
+[repo]: https://github.com/rustic-games/sm
+[examples]: https://github.com/rustic-games/sm/tree/master/examples
 [api]: https://docs.rs/sm
 
 ## Quick Example
