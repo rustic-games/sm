@@ -84,17 +84,13 @@ jobs:
 
       - run:
           name: Run unit tests
-          command: cargo test --all
-
-      - run:
-          name: Run integration tests
           command: |
             cd test_suite/deps
             cargo clean
             cargo update
             cargo build
-            cd ..
-            cargo test
+            cd ../..
+            cargo test --all
 
       - run:
           name: Run benchmarks

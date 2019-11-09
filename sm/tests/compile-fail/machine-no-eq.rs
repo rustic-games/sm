@@ -10,3 +10,5 @@ impl sm::Machine for HelloWorld {}
 struct HelloUniverse;
 impl sm::Machine for HelloUniverse {}
 //~^ ERROR can't compare `HelloUniverse` with `HelloUniverse`
+
+fn main() {}

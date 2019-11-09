@@ -1,7 +1,7 @@
 extern crate sm;
 use sm::sm;
 
-sm!{
+sm! {
     Lock {
         InitialStates { Locked }
 
@@ -14,4 +14,5 @@ fn main() {
 
     let _sm = Machine::new(Unlocked);
     //~^ ERROR the trait bound `Lock::Unlocked: sm::InitialState` is not satisfied
+    //~| ERROR the trait bound `Lock::Unlocked: sm::InitialState` is not satisfied
 }

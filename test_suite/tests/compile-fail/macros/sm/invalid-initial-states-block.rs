@@ -7,3 +7,5 @@ sm!{
         //~^ ERROR expected `InitialStates { ... }` block
     }
 }
+
+fn main() {}

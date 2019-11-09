@@ -7,3 +7,5 @@ sm!{
         //~^ ERROR expected identifier
     }
 }
+
+fn main() {}

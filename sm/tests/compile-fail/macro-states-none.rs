@@ -5,3 +5,5 @@ sm!{
     Lock {}
     //~^ ERROR unexpected end of input, expected identifier
 }
+
+fn main() {}
