@@ -30,6 +30,5 @@ harness = false
 
 [badges]
 circle-ci = { repository = "rustic-games/sm" }
-appveyor = { repository = "rusty-rockets/sm", service = "github" }
 codecov = { repository = "rustic-games/sm", branch = "master", service = "github" }
 is-it-maintained-issue-resolution = { repository = "rustic-games/sm" }

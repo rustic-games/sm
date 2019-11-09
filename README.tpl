@@ -27,8 +27,7 @@ SM aims to be a **safe**, **fast** and **simple** state machine library.
 
 [![Latest Crate Version](https://img.shields.io/crates/v/sm.svg?logo=rust&label=version&logoColor=white&colorB=brightgreen)](https://crates.io/crates/sm "The latest released version on crates.io.")
 [![Discord Chat](https://img.shields.io/discord/477552212156088320.svg?logo=discord&label=discord%20chat&logoColor=white)](https://discord.gg/Kc4qZWE "Ask a question or just enjoy your stay!")
-[![Linux Build Status](https://img.shields.io/circleci/project/github/rustic-games/sm/master.svg?logo=linux&label=linux&logoColor=white)](https://circleci.com/gh/rustic-games/sm/tree/master "Linux builds run on CircleCI. Click to see more details.")
-[![Windows Build Status](https://img.shields.io/appveyor/ci/rusty-rockets/sm/master.svg?logo=windows&label=windows&logoColor=white)](https://ci.appveyor.com/project/rusty-rockets/sm/branch/master "Windows builds run on AppVeyor. Click to see more details.")
+[![Build Status](https://img.shields.io/circleci/project/github/rustic-games/sm/master.svg?logo=linux&label=linux&logoColor=white)](https://circleci.com/gh/rustic-games/sm/tree/master "Linux builds run on CircleCI. Click to see more details.")
 [![Test Coverage Status](https://img.shields.io/codecov/c/github/rustic-games/sm/master.svg?logo=codeship&label=coverage&logoColor=white)](https://codecov.io/gh/rustic-games/sm "Code coverage is provided by Codecov. It's not 100% accurate, but good enough.")
 
 </div>
