@@ -491,6 +491,7 @@
 //!
 //! **Go forth and transition!**
 
+#![no_std]
 #![forbid(
     future_incompatible,
     macro_use_extern_crate,
