@@ -13,5 +13,5 @@ fn main() {
     use Lock::*;
 
     let _sm = Machine(Locked);
-    //~^ ERROR expected function, found struct `Machine`
+    //~^ ERROR expected function, tuple struct or tuple variant, found struct `Machine`
 }
