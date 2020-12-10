@@ -5,7 +5,7 @@ jobs:
       ignore:
         - gh-pages
     docker:
-      - image: rust:1
+      - image: rust:1.47
     steps:
       - checkout
       - run:
