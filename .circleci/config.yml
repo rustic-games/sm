@@ -5,13 +5,10 @@ jobs:
       ignore:
         - gh-pages
     docker:
+      # The compiletest-rs tests assume a specific Rust version's error outputs
       - image: rust:1.47
     steps:
       - checkout
-      - run:
-          name: Switch to stable rust
-          command: rustup default stable
-
       - run:
           name: Install tooling
           command: |
@@ -20,14 +17,13 @@ jobs:
       - run:
           name: Version information
           command: |
-            rustc --version
             cargo --version
-            rustup --version
             cargo clippy --version
 
-      - run:
-          name: Calculate dependencies
-          command: cargo generate-lockfile
+      # We ship the Cargo.lock, to support Nix derivations
+      # - run:
+      #     name: Calculate dependencies
+      #     command: cargo generate-lockfile
 
       - restore_cache:
           keys:
