@@ -15,5 +15,5 @@ fn main() {
 
     sm.transition(Invalid);
     //~^ ERROR cannot find value `Invalid` in this scope
-    //~| ERROR no method named `transition` found for type `Lock::Machine<Lock::Locked, sm::NoneEvent>` in the current scope
+    //~| ERROR no method named `transition` found for struct `Lock::Machine<Lock::Locked, sm::NoneEvent>` in the current scope
 }

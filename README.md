@@ -314,6 +314,13 @@ runtime overhead.
 
 **Go forth and transition!**
 
+## Building
+
+You can install Nix, and use `nix-build` to obtain a build environment and build the project according to the
+shipped `Cargo.lock` file.
+
+Otherwise, install Cargo/Rust and use `cargo build` as usual.
+
 ## License
 
 Licensed under either of

@@ -10,4 +10,4 @@ sm = { path = "../sm" }
 sm_macro = { path = "../sm_macro" }
 
 [dependencies]
-compiletest_rs = { version = "0.3", features = [ "stable" ] }
+compiletest_rs = { version = "*" }

@@ -8,3 +8,4 @@ publish = false
 
 [dependencies]
 sm = { path = "../../sm" }
+sm_macro = { path = "../../sm_macro" }

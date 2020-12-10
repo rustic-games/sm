@@ -108,7 +108,7 @@ struct TestTunables {
 
     // A random number generator, used to generate numbers between the above
     // min/max configurations.
-    rng: rand::ThreadRng,
+    rng: rand::rngs::ThreadRng,
 }
 
 fn main() {

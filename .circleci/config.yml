@@ -1,40 +1,47 @@
 version: 2
+
+parameters:
+  toolchain:
+    description: >-
+      Rust toolchain to use. Overrides the default toolchain (stable) or any
+      toolchain specified in the project via `rust-toolchain`.
+    type: string
+    default: '1.47'
+
+executor: default
+
 jobs:
   build:
     branches:
       ignore:
         - gh-pages
     docker:
-      - image: rust:1
+      # The compiletest-rs tests assume a specific Rust version's error outputs
+      - image: rust:1.47
     steps:
       - checkout
-      - run:
-          name: Switch to stable rust
-          command: rustup default stable
-
-      - run:
-          name: Install tooling
-          command: |
-            rustup component add clippy
+      - update_toolchain:
+          toolchain: <<parameters.toolchain>>
 
       - run:
           name: Version information
           command: |
-            rustc --version
             cargo --version
-            rustup --version
             cargo clippy --version
 
-      - run:
-          name: Calculate dependencies
-          command: cargo generate-lockfile
+      - clippy
 
-      - restore_cache:
-          keys:
-            - v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
-            - v1-bench-{{ .Branch }}-{{ .Revision }}
-            - v1-bench-{{ .Branch }}
-            - v1-bench-
+      - run:
+          # We ship the Cargo.lock, to support Nix derivations
+          name: Calculate dependencies
+          command: test -e Cargo.lock || cargo generate-lockfile
+
+      # - restore_cache:
+      #     keys:
+      #       - v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
+      #       - v1-bench-{{ .Branch }}-{{ .Revision }}
+      #       - v1-bench-{{ .Branch }}
+      #       - v1-bench-
 
       # DISABLED:
       # running 11 tests
@@ -78,9 +85,14 @@ jobs:
       #     name: Measure code coverage
       #     command: cargo kcov
 
-      - run:
-          name: Run lints
-          command: cargo clippy
+      # - run:
+      #     name: Run lints
+      #     command: |
+      #       if rustup component add clippy; then
+      #           cargo clippy 
+      #       else
+      #           echo Skipping clippy
+      #       fi
 
       - run:
           name: Run unit tests
